@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:covid_app/screen/covid_data_page.dart';
-import 'package:covid_app/repository/covid_stats.dart';
+import 'package:covid_app/model//entity/covid_stats.dart';
+import 'package:covid_app/model/repository/call_api.dart';
 import 'package:covid_app/screen/my_painter.dart';
 
 class MainPage extends StatefulWidget {
@@ -26,34 +27,34 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
 
-    Future<List<CovidStats>> getCountryCovid(String countrySlug, String dropDownValueMenu) async {
-      String countryDataCovidUrl =
-          'https://api.covid19api.com/live/country/$countrySlug/status/confirmed/date/2020-03-21T13:13:30Z';
-      final http.Response response = await http.get(Uri.parse(countryDataCovidUrl));
-      final Iterable responseData = json.decode(response.body);
-
-      List<CovidStats> covidData = List.from(responseData.map((dataJson) => CovidStats.fromJson(dataJson)));
-      covidData.forEach((data) {
-        data.date = data.date.substring(0, 10);
-      });
-      if (dropDownValueMenu == 'Newest') {
-        covidData.sort((b,a) {
-          // return a.confirmed.compareTo(b.confirmed);
-          return a.date.toLowerCase().compareTo(b.date.toLowerCase());
-        });
-      }
-      else if (dropDownValueMenu == 'Oldest') {
-        covidData.sort((a,b) {
-          return a.date.toUpperCase().compareTo(b.date.toUpperCase());
-        });//json parsing 부분 알기
-      }
-      else {
-        covidData.sort((b,a) {
-          return a.deaths.compareTo(b.deaths);
-        });
-      }
-      return covidData;
-    }
+    // Future<List<CovidStats>> getCountryCovid(String countrySlug, String dropDownValueMenu) async {
+    //   String countryDataCovidUrl =
+    //       'https://api.covid19api.com/live/country/$countrySlug/status/confirmed/date/2020-03-21T13:13:30Z';
+    //   final http.Response response = await http.get(Uri.parse(countryDataCovidUrl));
+    //   final Iterable responseData = json.decode(response.body);
+    //
+    //   List<CovidStats> covidData = List.from(responseData.map((dataJson) => CovidStats.fromJson(dataJson)));
+    //   covidData.forEach((data) {
+    //     data.date = data.date.substring(0, 10);
+    //   });
+    //   if (dropDownValueMenu == 'Newest') {
+    //     covidData.sort((b,a) {
+    //       // return a.confirmed.compareTo(b.confirmed);
+    //       return a.date.toLowerCase().compareTo(b.date.toLowerCase());
+    //     });
+    //   }
+    //   else if (dropDownValueMenu == 'Oldest') {
+    //     covidData.sort((a,b) {
+    //       return a.date.toUpperCase().compareTo(b.date.toUpperCase());
+    //     });//json parsing 부분 알기
+    //   }
+    //   else {
+    //     covidData.sort((b,a) {
+    //       return a.deaths.compareTo(b.deaths);
+    //     });
+    //   }
+    //   return covidData;
+    // }
     return Scaffold(
       resizeToAvoidBottomInset : false,
       backgroundColor: Colors.black,

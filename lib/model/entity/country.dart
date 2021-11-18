@@ -43,6 +43,7 @@ class Country {
       iso2: json['ISO2'],
     );
   }//logic 말고
+  //flat한 형태 가지고 오는 것 이것을 따로 list끼리 묵어주는 게 필요할까
 
   Map<String, dynamic> toJson() {
     return {
@@ -51,4 +52,4 @@ class Country {
       "iso2": iso2,
     };
   }
-}//Ntt
+}//entity
