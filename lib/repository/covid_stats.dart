@@ -22,7 +22,7 @@ class CovidStats {
   CovidStats({
     this.country = 'Switzerland',
     this.confirmed = 20505,
-    this.deaths = 777,
+    this.deaths = 666,
     this.recovered = 6415,
     this.active = 13424,
     this.date = '2020-04-04T00:00:00Z',
