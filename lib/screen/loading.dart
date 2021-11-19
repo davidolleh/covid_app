@@ -1,12 +1,9 @@
-import 'package:covid_app/controller/data_listing.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
-import 'package:covid_app/model//entity/country.dart';
 import 'package:covid_app/screen/main_page.dart';
 import 'package:covid_app/model//repository/call_api.dart';
 import 'package:covid_app/controller/data_listing.dart';
+import 'package:covid_app/model/entity/each_item.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -21,19 +18,13 @@ class _LoadingState extends State<Loading> {
     // TODO: implement initState
     super.initState();
 
-    // getCountry().then((countryNameList) {
-    //   List<String> countriesNameList = List.from(countryNameList.map((country) => country.country));// controller를 통해 model countriesList, counstriesSlug, sort까지 해줘야돼
-    //   List<String> countriesSlugs = List.from(countryNameList.map((country) => country.slug));
-    //     Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //       return MainPage(parseCountryName: countriesNameList,parseCountrySlug: countriesSlugs);
-    //         }
-    //       ));
-    //     });
-    getCountry().then((countryNameList) {
-      // List<String> countriesNameList = List.from(countryNameList.map((country) => country.country));// controller를 통해 model countriesList, counstriesSlug, sort까지 해줘야돼
-      // List<String> countriesSlugs = List.from(countryNameList.map((country) => country.slug));
+    getCountry().then((countryList) {
+      countryList.sort((a,b) {
+        return a.country.toLowerCase().compareTo(b.country.toLowerCase());
+      });
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MainPage(parseCountryName: getCountryList(countryNameList)[0],parseCountrySlug: countriesSlugs);
+        return MainPage(parseCountryName: List.from(countryList.map((countryName) => countryName.country)),parseCountrySlug: List.from(countryList.map((countryName) => countryName.slug)));
+        //데이터 모델은 이미 만든 것이야 그것을 country.dart 에서 이미 만든 것 통해 만들었어 데이터의 가장 큰 모델만 만들면 돼 변형된 형태 그것은 만드는 것 아닌거 같음
       }
       ));
     });

@@ -1,3 +1,6 @@
+import 'dart:html';
+
+import 'package:covid_app/model/entity/dropdown_data.dart';
 import 'package:flutter/widgets.dart';
 
 // class DropDownProvider with ChangeNotifier {
@@ -16,7 +19,11 @@ import 'package:flutter/widgets.dart';
 //   }
 // }
 class DropDownController {
-  void selectCountry(String newValue) {
+  // DropdownData selectCountry(String newValue) {
+  //
+  // }
+
+  void selectMenu(String newValue) {
 
   }
 }

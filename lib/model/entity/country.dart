@@ -30,7 +30,6 @@ class Country {
   final String country;
   final String slug;
   final String iso2;
-
   // factory CountryData.fromJson(Map<String, dynamic> json) =>
   //     _$UserFromJson(json);
   // Map<String, dynamic> toJson() => _$UserToJson(this);
@@ -52,4 +51,8 @@ class Country {
       "iso2": iso2,
     };
   }
-}//entity
+}//entity api로 가져온 데이터 저장 형태
+// model은 데이터와 로직만
+// view 보이는 화면 input을 받는다
+// controller 모데 view와 model 연결
+//controller 함수를 불러서 그안에서 setState해서 값을 변경 시키자 setState함수 자체를 controller로 옮겨놔라 -> 당연히 변하는 값들은 model로 설정해야 되겠지

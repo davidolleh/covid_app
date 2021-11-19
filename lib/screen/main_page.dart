@@ -1,11 +1,12 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:covid_app/controller/data_listing.dart';
 import 'package:flutter/material.dart';
 
 import 'package:covid_app/screen/covid_data_page.dart';
 import 'package:covid_app/model//entity/covid_stats.dart';
 import 'package:covid_app/model/repository/call_api.dart';
 import 'package:covid_app/screen/my_painter.dart';
+import 'package:covid_app/model/entity/each_item.dart';
+import 'package:covid_app/model/entity/dropdown_data.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({required this.parseCountryName, required this.parseCountrySlug});
@@ -13,6 +14,7 @@ class MainPage extends StatefulWidget {
   // var parseCountry;
   List<String> parseCountryName;
   List<String> parseCountrySlug;
+  // countryEachItem parseCountryData;
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -22,39 +24,12 @@ class _MainPageState extends State<MainPage> {
   String dropDownValueCountry = 'Korea (South)';// 바뀔것 같은것은 변수화 시켜서 저장 해서 이용
   String dropDownValueMenu = 'Newest';
   int i = 0;
-  // List<CountryDataCovid> parseCountryCovid = [];
   List<CovidStats> covidData = [];
+
+  DropdownData dropdownData = DropdownData();
+
   @override
   Widget build(BuildContext context) {
-
-    // Future<List<CovidStats>> getCountryCovid(String countrySlug, String dropDownValueMenu) async {
-    //   String countryDataCovidUrl =
-    //       'https://api.covid19api.com/live/country/$countrySlug/status/confirmed/date/2020-03-21T13:13:30Z';
-    //   final http.Response response = await http.get(Uri.parse(countryDataCovidUrl));
-    //   final Iterable responseData = json.decode(response.body);
-    //
-    //   List<CovidStats> covidData = List.from(responseData.map((dataJson) => CovidStats.fromJson(dataJson)));
-    //   covidData.forEach((data) {
-    //     data.date = data.date.substring(0, 10);
-    //   });
-    //   if (dropDownValueMenu == 'Newest') {
-    //     covidData.sort((b,a) {
-    //       // return a.confirmed.compareTo(b.confirmed);
-    //       return a.date.toLowerCase().compareTo(b.date.toLowerCase());
-    //     });
-    //   }
-    //   else if (dropDownValueMenu == 'Oldest') {
-    //     covidData.sort((a,b) {
-    //       return a.date.toUpperCase().compareTo(b.date.toUpperCase());
-    //     });//json parsing 부분 알기
-    //   }
-    //   else {
-    //     covidData.sort((b,a) {
-    //       return a.deaths.compareTo(b.deaths);
-    //     });
-    //   }
-    //   return covidData;
-    // }
     return Scaffold(
       resizeToAvoidBottomInset : false,
       backgroundColor: Colors.black,
@@ -90,25 +65,31 @@ class _MainPageState extends State<MainPage> {
                 border: Border.all(color: Colors.grey, width: 5.0),
               ),
               child: DropdownButton(
-                  value: dropDownValueCountry,
+                  value: dropdownData.dropDownCountry,
                   isExpanded: true,
                   style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20.0
                   ),
+                  // onChanged: (String? newValue) {
+                  //   setState(() {//어떠한 값을 가지고 잇다고 하고 state을 참조 데이터를 state에서 바꿔줘야한다 state가 변하면 여기서 data받아오는 것을 새롭게 한다 그러면 futur함수를 어디다 노아야 할지 생각해보자
+                  //     //list가 state가 list자체도 하나의 상태이니깐
+                  //     // getCountryCovid(widget.parseCountrySlug[widget.parseCountryName.indexOf(newValue!)], dropDownValueMenu).then((value) {
+                  //       // covidData = value;
+                  //       // }//! null 값 error null safety
+                  //     // );//type이 안맞아
+                  //     //future builder를 사용하면 이렇게 setState안에 넣어줘야 한다이것이 바뀌면 밑에 상태도 바뀐다 그러면 한번에 setState으로 묶어줘야지
+                  //     dropdownData.dropDownCountry = newValue!;
+                  //     //mvc패턴 역할의 완벽한 분리
+                  //   });
+                  // },
                   onChanged: (String? newValue) {
-                    setState(() {//어떠한 값을 가지고 잇다고 하고 state을 참조 데이터를 state에서 바꿔줘야한다 state가 변하면 여기서 data받아오는 것을 새롭게 한다 그러면 futur함수를 어디다 노아야 할지 생각해보자
-                      //list가 state가 list자체도 하나의 상태이니깐
-                      // getCountryCovid(widget.parseCountrySlug[widget.parseCountryName.indexOf(newValue!)], dropDownValueMenu).then((value) {
-                        // covidData = value;
-                        // }//! null 값 error null safety
-                      // );//type이 안맞아
-                      //future builder를 사용하면 이렇게 setState안에 넣어줘야 한다이것이 바뀌면 밑에 상태도 바뀐다 그러면 한번에 setState으로 묶어줘야지
-                      dropDownValueCountry = newValue!;
-                      //mvc패턴 역할의 완벽한 분리
+                    setState(() {
+                      dropdownData.selectCountry(newValue!);
                     });
                   },
                   items: widget.parseCountryName.map<DropdownMenuItem<String>>((String value) {
+                  // items: co.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -128,15 +109,21 @@ class _MainPageState extends State<MainPage> {
                   border: Border.all(color: Colors.grey, width: 5.0),
                 ),
                 child: DropdownButton(
-                    value: dropDownValueMenu,
+                    value: dropdownData.dropDownMenu,
                     isExpanded: true,
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 15.0
                     ),
+                    // onChanged: (String? newValue) {
+                    //   setState(() {//하나가 바뀌면 다른 애들도 바뀐것을 인지 하지 않는 것이다
+                    //     dropdownData.dropDownMenu = newValue!;
+                    //   });
+                    // },
                     onChanged: (String? newValue) {
-                      setState(() {//하나가 바뀌면 다른 애들도 바뀐것을 인지 하지 않는 것이다
-                        dropDownValueMenu = newValue!;
+                      setState(() {
+                        dropdownData.selectMenu(newValue!);
+                        //지금 변하는 것을 view자리에 햇는ㄴ데 setstate자리 자체를 controlloer로 옮기자
                       });
                     },
                     items: <String>['Oldest', 'Newest', 'Highest'].map<DropdownMenuItem<String>>((String value) {
@@ -149,15 +136,11 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
             FutureBuilder(
-                future: getCountryCovid(widget.parseCountrySlug[widget.parseCountryName.indexOf(dropDownValueCountry)], dropDownValueMenu),
+                future: getCountryCovid(widget.parseCountrySlug[widget.parseCountryName.indexOf(dropdownData.dropDownCountry)], dropdownData.dropDownMenu),
                 builder: (BuildContext context, AsyncSnapshot<List<CovidStats>> snapshot) {
                   List<Widget> children;
                   if (snapshot.hasData) {
-                    List<String> date = List.from(snapshot.data!.map((data) => data.date));
-                    List<int> deaths = List.from(snapshot.data!.map((data) => data.deaths));
-                    List<int> confirmed = List.from(snapshot.data!.map((data) => data.confirmed));
-                    int maxConfirmed = confirmed.reduce((curr, next) => curr > next ? curr: next);
-                    List<int> recovered = List.from(snapshot.data!.map((data) => data.recovered));
+                    CovidStatusEachItem covidStatusEachItem = getCovidStatusList(snapshot.requireData);
                     children = <Widget> [
                       Expanded(
                         child: ListView.separated(
@@ -168,7 +151,7 @@ class _MainPageState extends State<MainPage> {
                             return GestureDetector(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                    return DataPageDialog(date: date[index], deaths: deaths[index], confirmed: confirmed[index], recovered: recovered[index]);
+                                    return DataPageDialog(date: snapshot.data![index].date, deaths: snapshot.data![index].deaths, confirmed: snapshot.data![index].confirmed, recovered: snapshot.data![index].recovered);
                                   }));
                                 },
                                 child: Container(
@@ -182,7 +165,7 @@ class _MainPageState extends State<MainPage> {
                                         height: 20,
                                         color: Colors.blueGrey,
                                         child: Center(
-                                          child: Text(date[index],
+                                          child: Text(covidStatusEachItem.date[index],
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               color: Colors.white,
@@ -193,7 +176,7 @@ class _MainPageState extends State<MainPage> {
                                       Center(
                                         child: CustomPaint(
                                           // size: Size(confirmed[index].toDouble() / minConfirmed + 20, 0),
-                                          size: Size(250 * confirmed[index] / maxConfirmed.toDouble(), 0),
+                                          size: Size(250 * covidStatusEachItem.confirmed[index] / covidStatusEachItem.maxConfirmed.toDouble(), 0),
                                           // size: Size(50, 0),
                                           painter: MyPainter(),
                                         ),
