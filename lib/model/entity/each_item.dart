@@ -1,3 +1,5 @@
+// TODO:: Country랑 CovidStats라는 Entity 클래스들과 아래의 두 클래스들이랑은 차이가 없음 == 아래 2개는 필요 없는 클래스.
+// TODO:: 이해가 안되면 질문 ㄱㄱ.
 class CountryEachItem {
   CountryEachItem({required this.countryNames, required this.countrySlugs});
 

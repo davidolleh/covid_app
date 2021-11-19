@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+// TODO:: JSON Serializable을 어떻게 쓰는지 혼자 한번 공부해보고 모르겠으면 질문.
 @JsonSerializable()
 class CovidStats {
   CovidStats({
