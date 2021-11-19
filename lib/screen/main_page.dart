@@ -1,32 +1,26 @@
-import 'package:covid_app/controller/data_listing.dart';
+import 'package:covid_app/controller/dropdown_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:covid_app/screen/covid_data_page.dart';
 import 'package:covid_app/model//entity/covid_stats.dart';
 import 'package:covid_app/model/repository/call_api.dart';
 import 'package:covid_app/screen/my_painter.dart';
-import 'package:covid_app/model/entity/each_item.dart';
 import 'package:covid_app/model/entity/dropdown_data.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({required this.parseCountryName, required this.parseCountrySlug});
 
-  // var parseCountry;
   List<String> parseCountryName;
   List<String> parseCountrySlug;
-  // countryEachItem parseCountryData;
 
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  String dropDownValueCountry = 'Korea (South)';// 바뀔것 같은것은 변수화 시켜서 저장 해서 이용
-  String dropDownValueMenu = 'Newest';
-  int i = 0;
-  List<CovidStats> covidData = [];
 
   DropdownData dropdownData = DropdownData();
+  DropDownController dropDownController = DropDownController();
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +79,8 @@ class _MainPageState extends State<MainPage> {
                   // },
                   onChanged: (String? newValue) {
                     setState(() {
-                      dropdownData.selectCountry(newValue!);
+                      // dropdownData.selectCountry(newValue!);
+                      dropDownController.selectCountry(dropdownData, newValue!);
                     });
                   },
                   items: widget.parseCountryName.map<DropdownMenuItem<String>>((String value) {
@@ -122,8 +117,9 @@ class _MainPageState extends State<MainPage> {
                     // },
                     onChanged: (String? newValue) {
                       setState(() {
-                        dropdownData.selectMenu(newValue!);
+                        // dropdownData.selectMenu(newValue!);
                         //지금 변하는 것을 view자리에 햇는ㄴ데 setstate자리 자체를 controlloer로 옮기자
+                        dropDownController.selectMenu(dropdownData, newValue!);
                       });
                     },
                     items: <String>['Oldest', 'Newest', 'Highest'].map<DropdownMenuItem<String>>((String value) {
@@ -140,7 +136,8 @@ class _MainPageState extends State<MainPage> {
                 builder: (BuildContext context, AsyncSnapshot<List<CovidStats>> snapshot) {
                   List<Widget> children;
                   if (snapshot.hasData) {
-                    CovidStatusEachItem covidStatusEachItem = getCovidStatusList(snapshot.requireData);
+                    List<int> confirmed = List.from(snapshot.data!.map((e) => e.confirmed));
+                    int maxConfirmed = confirmed.reduce((curr, next) => curr > next ? curr : next);
                     children = <Widget> [
                       Expanded(
                         child: ListView.separated(
@@ -165,7 +162,7 @@ class _MainPageState extends State<MainPage> {
                                         height: 20,
                                         color: Colors.blueGrey,
                                         child: Center(
-                                          child: Text(covidStatusEachItem.date[index],
+                                          child: Text(snapshot.data![index].date,
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               color: Colors.white,
@@ -176,7 +173,7 @@ class _MainPageState extends State<MainPage> {
                                       Center(
                                         child: CustomPaint(
                                           // size: Size(confirmed[index].toDouble() / minConfirmed + 20, 0),
-                                          size: Size(250 * covidStatusEachItem.confirmed[index] / covidStatusEachItem.maxConfirmed.toDouble(), 0),
+                                          size: Size(250 * snapshot.data![index].confirmed / maxConfirmed.toDouble(), 0),
                                           // size: Size(50, 0),
                                           painter: MyPainter(),
                                         ),
