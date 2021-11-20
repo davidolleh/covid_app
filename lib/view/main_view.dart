@@ -101,10 +101,10 @@ class MainView extends StatelessWidget {
                     onChanged: (String? newOrder) {
                       controller.changeOrder(newOrder!);
                     },
-                    items: <String>['Oldest', 'Newest', 'Highest'].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
+                    items: ['Oldest', 'Newest', 'Highest'].map((String orderType) {
+                      return DropdownMenuItem(
+                        value: orderType,
+                        child: Text(orderType),
                       );
                     }).toList()
                 ),
@@ -131,9 +131,11 @@ class MainView extends StatelessWidget {
                       height: 30,
                       color: Colors.purple,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(left: 8),
+                            margin: const EdgeInsets.only(left: 8, right: 8),
                             width: 100,
                             height: 20,
                             color: Colors.blueGrey,
@@ -146,13 +148,13 @@ class MainView extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Center(
-                            child: CustomPaint(
-                              // size: Size(confirmed[index].toDouble() / minConfirmed + 20, 0),
-                              size: Size(250 * dailyCovidStats[index].confirmed / maxConfirmed.toDouble(), 0),
-                              // size: Size(50, 0),
-                              painter: MyPainter(),
-                            ),
+                          Row(
+                              children: [
+                                CustomPaint(
+                                  size: Size(250 * dailyCovidStats[index].confirmed / maxConfirmed.toDouble(), 0),
+                                  painter: MyPainter(),
+                                ),
+                              ]
                           ),
                         ],
                       ),

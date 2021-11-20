@@ -11,7 +11,7 @@ class MyPainter extends CustomPainter {
     paint.strokeWidth = 6.5;
 
     // Offset p1 = Offset(50.0, 20.0);
-    Offset p1 = Offset(20.0, 0.0);
+    Offset p1 = Offset(0.0, 0.0);
     Offset p2 = Offset(size.width, size.height);
 
     canvas.drawLine(p1, p2, paint);
