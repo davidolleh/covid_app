@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import '../view/main_view.dart';
 
 class MainPage extends StatefulWidget {
-  CovidModel model;
+  final CovidModel _model;
 
-  MainPage({required this.model});
+  const MainPage({
+    required CovidModel model,
+    Key? key}) :
+        _model = model,
+        super(key: key);
 
   @override
   MainPageController createState() => MainPageController();
@@ -15,37 +19,37 @@ class MainPage extends StatefulWidget {
 
 class MainPageController extends State<MainPage> {
 
-  late CovidModel model;
+  late CovidModel _model;
 
   @override
   void initState() {
     super.initState();
-    model = widget.model;
-    changeCountry(model.selectedCountry, model.order);
+    _model = widget._model;
+    changeCountry(_model.selectedCountry, _model.order);
   }
 
   @override
   Widget build(BuildContext context) {
     return MainView(
-      selectedCountry: model.selectedCountry,
-      countries: model.countries,
-      order: model.order,
-      dailyCovidStats: model.dailyCovidStats,
+      selectedCountry: _model.selectedCountry,
+      countries: _model.countries,
+      order: _model.order,
+      dailyCovidStats: _model.dailyCovidStats,
       controller: this,
     );
   }
 
   void changeCountry(Country newCountry, String order) {
-    model
-        .changeCountry(newCountry, order)
+    _model
+        .changeCountry(newCountry)
         .then(
-            (_) => setState(() {model = model;})
+            (_) => setState(() {_model = _model;})
     );
   }
 
   void changeOrder(String newOrder) {
     setState(() {
-      model.order = newOrder;
+      _model.order = newOrder;
     });
   }
 }

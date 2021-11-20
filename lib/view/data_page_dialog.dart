@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
 class DataPageDialog extends StatefulWidget {
-  // const DataPage({Key? key}) : super(key: key);
-  DataPageDialog({required this.date, required this.deaths, required this.confirmed, required this.recovered});
 
-  String date;
-  int deaths;
-  int confirmed;
-  int recovered;
+  const DataPageDialog({
+    required this.date,
+    required this.deaths,
+    required this.confirmed,
+    required this.recovered,
+    Key? key}) : super(key: key);
+
+  final String date;
+  final int deaths;
+  final int confirmed;
+  final int recovered;
 
   @override
   _DataPageDialogState createState() => _DataPageDialogState();

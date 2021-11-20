@@ -12,30 +12,30 @@ class LoadingPage extends StatefulWidget {
 }
 
 class LoadingController extends State<LoadingPage> {
-  late CovidModel model;
+  late CovidModel _model;
 
   @override
   void initState() {
     super.initState();
-    model = CovidModel();
+    _model = CovidModel();
     getCountries();
   }
 
   @override
   Widget build(BuildContext context) {
-    return LoadingView(countries: model.countries);
+    return LoadingView(countries: _model.countries);
   }
 
   void getCountries() {
-    model
-        .getCountries()
+    _model
+        .fetchCountries()
         .then(
             (_) {
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
                     return MainPage(
-                      model: model,
+                      model: _model,
                     );
                   })
               );
