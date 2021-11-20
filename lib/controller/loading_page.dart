@@ -1,9 +1,8 @@
-import 'package:covid_app/model/loading_model.dart';
+import 'package:covid_app/model/covid_model.dart';
 import 'package:covid_app/view/loading_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:covid_app/controller/main_page.dart';
-import 'package:covid_app/model/repository/covid_repository.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -13,28 +12,33 @@ class LoadingPage extends StatefulWidget {
 }
 
 class LoadingController extends State<LoadingPage> {
-  late LoadingModel model;
+  late CovidModel model;
 
   @override
   void initState() {
     super.initState();
-    model = LoadingModel();
+    model = CovidModel();
     getCountries();
   }
 
   @override
   Widget build(BuildContext context) {
-    return LoadingView();
+    return LoadingView(countries: model.countries);
   }
 
   void getCountries() {
-    model.getCountries().then(
+    model
+        .getCountries()
+        .then(
             (_) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MainPage(
-          countries: model.countries,
-        );
-      }));
-    });
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return MainPage(
+                      model: model,
+                    );
+                  })
+              );
+            });
   }
 }

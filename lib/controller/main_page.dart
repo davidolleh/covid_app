@@ -1,13 +1,13 @@
+import 'package:covid_app/model/covid_model.dart';
 import 'package:covid_app/model/entity/country.dart';
-import 'package:covid_app/model/main_model.dart';
 import 'package:flutter/material.dart';
 
 import '../view/main_view.dart';
 
 class MainPage extends StatefulWidget {
-  List<Country> countries;
+  CovidModel model;
 
-  MainPage({required this.countries});
+  MainPage({required this.model});
 
   @override
   MainPageController createState() => MainPageController();
@@ -15,15 +15,12 @@ class MainPage extends StatefulWidget {
 
 class MainPageController extends State<MainPage> {
 
-  late MainModel model;
+  late CovidModel model;
 
   @override
   void initState() {
     super.initState();
-    model = MainModel(
-        countries: widget.countries,
-        order: 'Newest'
-    );
+    model = widget.model;
     changeCountry(model.selectedCountry, model.order);
   }
 
@@ -48,7 +45,7 @@ class MainPageController extends State<MainPage> {
 
   void changeOrder(String newOrder) {
     setState(() {
-      model.changeDailyCovidStatsOrder(newOrder);
+      model.order = newOrder;
     });
   }
 }
