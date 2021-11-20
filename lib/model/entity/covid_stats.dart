@@ -16,11 +16,11 @@ class CovidStats {
   @JsonKey(name: 'Country')
   final String country;
   @JsonKey(name: 'Confirmed')
-  final int confirmed;
+  int confirmed;
   @JsonKey(name: 'Deaths')
-  final int deaths;
+  int deaths;
   @JsonKey(name: 'Recovered')
-  final int recovered;
+  int recovered;
   @JsonKey(name: 'Active')
   final int active;
   @JsonKey(name: 'Date')

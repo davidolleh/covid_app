@@ -21,13 +21,24 @@ class CovidRepository{
   }
 
   Future<List<CovidStats>> fetchCovidStats(String countrySlug) async {
+    var startDate = DateTime.now().subtract(const Duration(days: 201));
     String countryDataCovidUrl =
-        'https://api.covid19api.com/live/country/$countrySlug/status/confirmed/date/2020-03-21T13:13:30Z';
+        'https://api.covid19api.com/live/country/$countrySlug/status/confirmed/date/${startDate}Z';
     final http.Response response = await http.get(Uri.parse(countryDataCovidUrl));
     final Iterable responseData = json.decode(response.body);
 
     List<CovidStats> covidData = List.from(responseData.map((dataJson) => CovidStats.fromJson(dataJson)));
-    covidData.forEach((data) => data.date = data.date.substring(0, 10));
+    for (var data in covidData) {
+      data.date = data.date.substring(0, 10);
+    }
+    for (var i in (Iterable.generate(covidData.length).toList().reversed)) {
+      if(i == 0) continue;
+      covidData[i].confirmed -= covidData[i-1].confirmed;
+      covidData[i].deaths -= covidData[i-1].deaths;
+      covidData[i].recovered -= covidData[i-1].recovered;
+    }
+    covidData.removeAt(0);
+
     return covidData;
   }
 }
