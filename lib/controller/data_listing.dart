@@ -1,6 +1,8 @@
 import 'package:covid_app/model/entity/covid_stats.dart';
 import 'package:covid_app/model/entity/each_item.dart';
 
+// TODO:: 이렇게 함수만 만드는 것은 좋은 습관이 아님.
+// TODO:: Controller 클래스 내에 비즈니스 로직 넣고, Model 내에 데이터 request 및 response 로직 넣는걸로
 CountryEachItem getCountryList(var data) {
   List<String> countriesNameList = List.from(data.map((country) => country.country));// controller를 통해 model countriesList, counstriesSlug, sort까지 해줘야돼
   List<String> countriesSlugs = List.from(data.map((country) => country.slug));

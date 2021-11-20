@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:covid_app/screen/loading.dart';
+import 'package:covid_app/controller/loading.dart';
 
 
 void main() {

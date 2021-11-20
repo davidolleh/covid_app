@@ -1,26 +1,34 @@
 import 'package:covid_app/controller/dropdown_controller.dart';
+import 'package:covid_app/model/covid_model.dart';
 import 'package:flutter/material.dart';
 
-import 'package:covid_app/screen/covid_data_page.dart';
+import 'package:covid_app/view/covid_data_page.dart';
 import 'package:covid_app/model/entity/covid_stats.dart';
 import 'package:covid_app/model/repository/covid_repository.dart';
-import 'package:covid_app/screen/my_painter.dart';
+import 'package:covid_app/view/my_painter.dart';
 import 'package:covid_app/model/entity/dropdown_data.dart';
 
+// TODO:: Loading 페이지 예시를 토대로 재구성 해보기
 class MainPage extends StatefulWidget {
-  MainPage({required this.parseCountryName, required this.parseCountrySlug});
+  MainPage({required this.model});
 
-  List<String> parseCountryName;
-  List<String> parseCountrySlug;
+  CovidModel model;
 
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  late CovidModel model;
 
   DropdownData dropdownData = DropdownData();
   DropDownController dropDownController = DropDownController();
+
+  @override
+  void initState() {
+    super.initState();
+    model = widget.model;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,13 +91,15 @@ class _MainPageState extends State<MainPage> {
                       dropDownController.selectCountry(dropdownData, newValue!);
                     });
                   },
-                  items: widget.parseCountryName.map<DropdownMenuItem<String>>((String value) {
-                  // items: co.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList()
+                  // TODO:: Model에 맞게 items 값 수정함.
+                  items: model.countries
+                      .map(
+                          (country) =>
+                              DropdownMenuItem(
+                                  value: country.country,
+                                  child: Text(country.country)
+                              ))
+                      .toList()
               ),
             ),
             Align(
@@ -131,8 +141,17 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
+            // TODO:: 지금 바로 실행하면 FutureBuilder 자체는 에러뜸. 이는 Model 구현 사항을 남겨두었기 때문임.
+            // TODO:: FutureBuilder는 개인적으로 지금 단계에서 쓸 위젯은 아닌듯.
+            // TODO:: 그냥 Listview에 값 넘겨주는 식으로 구현해보기.
             FutureBuilder(
-                future: getCountryCovid(widget.parseCountrySlug[widget.parseCountryName.indexOf(dropdownData.dropDownCountry)], dropdownData.dropDownMenu),
+                // TODO:: Model에 맞춰 future 값 수정
+                future: model.repository.getCountryCovid(
+                    model.countries[
+                      model.countries.indexWhere((country) => country.country == dropdownData.dropDownCountry)
+                    ].country,
+                    dropdownData.dropDownMenu
+                ),
                 builder: (BuildContext context, AsyncSnapshot<List<CovidStats>> snapshot) {
                   List<Widget> children;
                   if (snapshot.hasData) {
