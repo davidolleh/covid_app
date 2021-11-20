@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-// TODO:: JSON Serializable을 어떻게 쓰는지 혼자 한번 공부해보고 모르겠으면 질문.
+part 'covid_stats.g.dart';
+
 @JsonSerializable()
 class CovidStats {
   CovidStats({
@@ -12,35 +13,20 @@ class CovidStats {
     this.date = '2020-04-04T00:00:00Z',
   });
 
+  @JsonKey(name: 'Country')
   final String country;
+  @JsonKey(name: 'Confirmed')
   final int confirmed;
+  @JsonKey(name: 'Deaths')
   final int deaths;
+  @JsonKey(name: 'Recovered')
   final int recovered;
+  @JsonKey(name: 'Active')
   final int active;
+  @JsonKey(name: 'Date')
   String date;
 
-  // factory CountryData.fromJson(Map<String, dynamic> json) =>
-  //     _$UserFromJson(json);
-  // Map<String, dynamic> toJson() => _$UserToJson(this);
-  factory CovidStats.fromJson(Map<String, dynamic> json) {
-    return CovidStats(
-        country: json['Country'],
-        confirmed: json['Confirmed'],
-        deaths: json['Deaths'],
-        recovered: json['Recovered'],
-        active: json['Active'],
-        date: json['Date'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "country": country,
-      'confirmed': confirmed,
-      'deaths': deaths,
-      'recovered': recovered,
-      'active': active,
-      'date': date,
-    };
-  }
+  factory CovidStats.fromJson(Map<String, dynamic> json) =>
+      _$CovidStatsFromJson(json);
+  Map<String, dynamic> toJson() => _$CovidStatsToJson(this);
 }
