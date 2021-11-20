@@ -1,27 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-// import 'country_data.g.dart';
-
-// class CountryData {
-//   final String url;
-//   CountryData(this.url);
-
-//   Future<dynamic> getJsonData() async {
-//     http.Response response = await http.get(Uri.parse(url));
-//     // 데이터 직렬화 하는 이유: data자체만 넘겨서 내 언어에 맞게 수정하는 것
-
-//     if (response.statusCode == 200) {
-//       String jsonData = response.body;
-//       // var parsingDataAll = jsonDecode(jsonData);
-//       var parsingData = jsonDecode(jsonData);
-//       // var parsingData = json.decoder(jsonData)
-//       // json.decode(json.encode(jsonData)) as Map<String, dynamic>;
-//       //api를 가져올때 전체를 들고 오는 것이지 가려서 받을 수 없다
-//       return parsingData;
-//     } else {
-//       response.reasonPhrase;
-//     }
-//   }
-// }
 
 @JsonSerializable()
 class Country {
