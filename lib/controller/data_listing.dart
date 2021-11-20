@@ -1,7 +1,6 @@
 import 'package:covid_app/model/entity/covid_stats.dart';
 import 'package:covid_app/model/entity/each_item.dart';
 
-// TODO:: Controller도 클래스여야해
 CountryEachItem getCountryList(var data) {
   List<String> countriesNameList = List.from(data.map((country) => country.country));// controller를 통해 model countriesList, counstriesSlug, sort까지 해줘야돼
   List<String> countriesSlugs = List.from(data.map((country) => country.slug));
