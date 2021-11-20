@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:covid_app/screen/covid_data_page.dart';
 import 'package:covid_app/model/entity/covid_stats.dart';
-import 'package:covid_app/model/repository/call_api.dart';
+import 'package:covid_app/model/repository/covid_repository.dart';
 import 'package:covid_app/screen/my_painter.dart';
 import 'package:covid_app/model/entity/dropdown_data.dart';
 

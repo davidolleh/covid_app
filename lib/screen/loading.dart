@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:covid_app/screen/main_page.dart';
-import 'package:covid_app/model//repository/call_api.dart';
+import 'package:covid_app/model/repository/covid_repository.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
