@@ -6,9 +6,10 @@ import 'package:covid_app/model/entity/country.dart';
 
 
 class CovidRepository{
-  Future<List<Country>> fetchCountries() async {
-    const String countryDataUrl = 'https://api.covid19api.com/countries';
+  final String covidApiUrl = 'https://api.covid19api.com/';
 
+  Future<List<Country>> fetchCountries() async {
+    String countryDataUrl = covidApiUrl + 'countries';
     final http.Response response = await http.get(Uri.parse(countryDataUrl));
     final Iterable responseData = json.decode(response.body);
     final List<Country> countries = List.from(
@@ -22,8 +23,8 @@ class CovidRepository{
 
   Future<List<CovidStats>> fetchCovidStats(String countrySlug) async {
     var startDate = DateTime.now().subtract(const Duration(days: 201));
-    String countryDataCovidUrl =
-        'https://api.covid19api.com/live/country/$countrySlug/status/confirmed/date/${startDate}Z';
+    String countryDataCovidUrl = covidApiUrl +
+        'live/country/$countrySlug/status/confirmed/date/${startDate}Z';
     final http.Response response = await http.get(Uri.parse(countryDataCovidUrl));
     final Iterable responseData = json.decode(response.body);
 
