@@ -1,4 +1,3 @@
-import 'package:covid_app/controller/dropdown_controller.dart';
 import 'package:covid_app/model/covid_model.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +5,6 @@ import 'package:covid_app/view/covid_data_page.dart';
 import 'package:covid_app/model/entity/covid_stats.dart';
 import 'package:covid_app/model/repository/covid_repository.dart';
 import 'package:covid_app/view/my_painter.dart';
-import 'package:covid_app/model/entity/dropdown_data.dart';
 
 // TODO:: Loading 페이지 예시를 토대로 재구성 해보기
 class MainPage extends StatefulWidget {
@@ -20,9 +18,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late CovidModel model;
-
-  DropdownData dropdownData = DropdownData();
-  DropDownController dropDownController = DropDownController();
 
   @override
   void initState() {
@@ -67,7 +62,7 @@ class _MainPageState extends State<MainPage> {
                 border: Border.all(color: Colors.grey, width: 5.0),
               ),
               child: DropdownButton(
-                  value: dropdownData.dropDownCountry,
+                  value: model.selectedCountry.country,
                   isExpanded: true,
                   style: const TextStyle(
                       color: Colors.black,
@@ -87,14 +82,13 @@ class _MainPageState extends State<MainPage> {
                   // },
                   onChanged: (String? newValue) {
                     setState(() {
-                      // dropdownData.selectCountry(newValue!);
-                      dropDownController.selectCountry(dropdownData, newValue!);
+                      model.changeSelectCountry(model.selectedCountry, newValue!);
+                      // model.selectedCountry = model.countries[model.countries.indexWhere((country) => country.country == newValue)]!;//이것은 내가 model에서 setter를 정의하면 할 수 있는 행동
+                      model.fetchCovidSats();
                     });
                   },
                   // TODO:: Model에 맞게 items 값 수정함.
-                  items: model.countries
-                      .map(
-                          (country) =>
+                  items: model.countries.map((country) =>
                               DropdownMenuItem(
                                   value: country.country,
                                   child: Text(country.country)
@@ -114,22 +108,19 @@ class _MainPageState extends State<MainPage> {
                   border: Border.all(color: Colors.grey, width: 5.0),
                 ),
                 child: DropdownButton(
-                    value: dropdownData.dropDownMenu,
+                    value: model.order,
                     isExpanded: true,
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 15.0
                     ),
-                    // onChanged: (String? newValue) {
-                    //   setState(() {//하나가 바뀌면 다른 애들도 바뀐것을 인지 하지 않는 것이다
-                    //     dropdownData.dropDownMenu = newValue!;
-                    //   });
-                    // },
                     onChanged: (String? newValue) {
                       setState(() {
                         // dropdownData.selectMenu(newValue!);
                         //지금 변하는 것을 view자리에 햇는ㄴ데 setstate자리 자체를 controlloer로 옮기자
-                        dropDownController.selectMenu(dropdownData, newValue!);
+                        // model.selectCountry(model., newValue)
+                        model.changeSelectOrder(newValue!);
+                        model.orderCovidStats();
                       });
                     },
                     items: <String>['Oldest', 'Newest', 'Highest'].map<DropdownMenuItem<String>>((String value) {
@@ -141,111 +132,158 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            // TODO:: 지금 바로 실행하면 FutureBuilder 자체는 에러뜸. 이는 Model 구현 사항을 남겨두었기 때문임.
-            // TODO:: FutureBuilder는 개인적으로 지금 단계에서 쓸 위젯은 아닌듯.
-            // TODO:: 그냥 Listview에 값 넘겨주는 식으로 구현해보기.
-            FutureBuilder(
-                // TODO:: Model에 맞춰 future 값 수정
-                future: model.repository.getCountryCovid(
-                    model.countries[
-                      model.countries.indexWhere((country) => country.country == dropdownData.dropDownCountry)
-                    ].country,
-                    dropdownData.dropDownMenu
-                ),
-                builder: (BuildContext context, AsyncSnapshot<List<CovidStats>> snapshot) {
-                  List<Widget> children;
-                  if (snapshot.hasData) {
-                    List<int> confirmed = List.from(snapshot.data!.map((e) => e.confirmed));
-                    int maxConfirmed = confirmed.reduce((curr, next) => curr > next ? curr : next);
-                    children = <Widget> [
-                      Expanded(
-                        child: ListView.separated(
-                          padding: const EdgeInsets.all(8),
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                    return DataPageDialog(date: snapshot.data![index].date, deaths: snapshot.data![index].deaths, confirmed: snapshot.data![index].confirmed, recovered: snapshot.data![index].recovered);
-                                  }));
-                                },
-                                child: Container(
-                                  height: 30,
-                                  color: Colors.purple,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 8),
-                                        width: 100,
-                                        height: 20,
-                                        color: Colors.blueGrey,
-                                        child: Center(
-                                          child: Text(snapshot.data![index].date,
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: CustomPaint(
-                                          // size: Size(confirmed[index].toDouble() / minConfirmed + 20, 0),
-                                          size: Size(250 * snapshot.data![index].confirmed / maxConfirmed.toDouble(), 0),
-                                          // size: Size(50, 0),
-                                          painter: MyPainter(),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.all(8),
+                shrinkWrap: true,
+                itemCount: model.dailyCovidStats.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return DataPageDialog(date: model.dailyCovidStats[index].date, deaths: model.dailyCovidStats[index].deaths, confirmed: model.dailyCovidStats[index].confirmed, recovered: model.dailyCovidStats[index].recovered);
+                      }));
+                    },
+                    child: Container(
+                      height: 30,
+                      color: Colors.purple,
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 8),
+                            width: 100,
+                            height: 20,
+                            color: Colors.blueGrey,
+                            child: Center(
+                              child: Text(model.dailyCovidStats[index].date,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
                                 ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) => const Divider(
-                            height: 8,
+                              ),
+                            ),
                           ),
-                        ),
+                          Center(
+                            child: CustomPaint(
+                              // size: Size(confirmed[index].toDouble() / minConfirmed + 20, 0),
+                              size: Size(250 * model.dailyCovidStats[index].confirmed / model.maxConfirmed.toDouble(), 0),
+                              // size: Size(50, 0),
+                              painter: MyPainter(),
+                            ),
+                          ),
+                        ],
                       ),
-                    ];
-                  }
-                  else if (snapshot.hasError) {
-                    print('error');
-                    children = const <Widget>[
-                      const Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 60,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: Text('Awaiting result...'),
-                      )
-                    ];
-                  }
-                  else {
-                    print('else');
-                    children = const <Widget>[
-                      SizedBox(
-                        child: CircularProgressIndicator(),
-                        width: 60,
-                        height: 60,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: Text('Awaiting result...'),
-                      )
-                    ];
-                  }
-                  return Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: children,
                     ),
                   );
                 },
+                separatorBuilder: (BuildContext context, int index) => const Divider(
+                  height: 8,
+                ),
+              ),
             ),
+            // TODO:: 지금 바로 실행하면 FutureBuilder 자체는 에러뜸. 이는 Model 구현 사항을 남겨두었기 때문임.
+            // TODO:: FutureBuilder는 개인적으로 지금 단계에서 쓸 위젯은 아닌듯.
+            // TODO:: 그냥 Listview에 값 넘겨주는 식으로 구현해보기.
+            // FutureBuilder(
+            //     // TODO:: Model에 맞춰 future 값 수정
+            //     future: model.repository.getCountryCovid(
+            //         model.countries[model.countries.indexWhere((country) => country == model.selectedCountry)].slug,
+            //         model.order
+            //     ),
+            //     builder: (BuildContext context, AsyncSnapshot<List<CovidStats>> snapshot) {
+            //       List<Widget> children;
+            //       if (snapshot.hasData) {
+            //         List<int> confirmed = List.from(snapshot.data!.map((e) => e.confirmed));
+            //         int maxConfirmed = confirmed.reduce((curr, next) => curr > next ? curr : next);
+            //         children = <Widget> [
+            //           Expanded(
+            //             child: ListView.separated(
+            //               padding: const EdgeInsets.all(8),
+            //               shrinkWrap: true,
+            //               itemCount: snapshot.data!.length,
+            //               itemBuilder: (BuildContext context, int index) {
+            //                 return GestureDetector(
+            //                     onTap: () {
+            //                       Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //                         return DataPageDialog(date: snapshot.data![index].date, deaths: snapshot.data![index].deaths, confirmed: snapshot.data![index].confirmed, recovered: snapshot.data![index].recovered);
+            //                       }));
+            //                     },
+            //                     child: Container(
+            //                       height: 30,
+            //                       color: Colors.purple,
+            //                       child: Row(
+            //                         children: [
+            //                           Container(
+            //                             margin: const EdgeInsets.only(left: 8),
+            //                             width: 100,
+            //                             height: 20,
+            //                             color: Colors.blueGrey,
+            //                             child: Center(
+            //                               child: Text(snapshot.data![index].date,
+            //                                 textAlign: TextAlign.center,
+            //                                 style: const TextStyle(
+            //                                   color: Colors.white,
+            //                                 ),
+            //                               ),
+            //                             ),
+            //                           ),
+            //                           Center(
+            //                             child: CustomPaint(
+            //                               // size: Size(confirmed[index].toDouble() / minConfirmed + 20, 0),
+            //                               size: Size(250 * snapshot.data![index].confirmed / maxConfirmed.toDouble(), 0),
+            //                               // size: Size(50, 0),
+            //                               painter: MyPainter(),
+            //                             ),
+            //                           ),
+            //                         ],
+            //                       ),
+            //                     ),
+            //                 );
+            //               },
+            //               separatorBuilder: (BuildContext context, int index) => const Divider(
+            //                 height: 8,
+            //               ),
+            //             ),
+            //           ),
+            //         ];
+            //       }
+            //       else if (snapshot.hasError) {
+            //         print('error');
+            //         children = const <Widget>[
+            //           const Icon(
+            //             Icons.error_outline,
+            //             color: Colors.red,
+            //             size: 60,
+            //           ),
+            //           Padding(
+            //             padding: EdgeInsets.only(top: 16),
+            //             child: Text('Awaiting result...'),
+            //           )
+            //         ];
+            //       }
+            //       else {
+            //         print('else');
+            //         children = const <Widget>[
+            //           SizedBox(
+            //             child: CircularProgressIndicator(),
+            //             width: 60,
+            //             height: 60,
+            //           ),
+            //           Padding(
+            //             padding: EdgeInsets.only(top: 16),
+            //             child: Text('Awaiting result...'),
+            //           )
+            //         ];
+            //       }
+            //       return Expanded(
+            //         child: Column(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           crossAxisAlignment: CrossAxisAlignment.center,
+            //           children: children,
+            //         ),
+            //       );
+            //     },
+            // ),
           ],
         ),
       ),

@@ -33,22 +33,8 @@ class CovidRepository{
     // TODO:: Repository는 데이터 가공을 하지 말아야 함. Sorting은 일단 지금은 Repository에서 하지 않는걸로.
     //sort 는 datacontroller 에 이용해야 되겠지 call_api는 데이터 전달하는 역할 가공 하고 데이터를 바꾸는 것은 controller
     // TODO:: a,b argument를 쓰는 람다 함수(익명 함수)가 많은데, 순서가 이렇게 계속 바뀔 필요가 있나?(e.g. a,b; b,a; a,b) 순서를 통일하도록 하자(a,b).
-    if (dropDownValueMenu == 'Newest') {
-      covidData.sort((b,a) {
-        // return a.confirmed.compareTo(b.confirmed);
-        return a.date.toLowerCase().compareTo(b.date.toLowerCase());
-      });
-    }
-    else if (dropDownValueMenu == 'Oldest') {
-      covidData.sort((a,b) {
-        return a.date.toUpperCase().compareTo(b.date.toUpperCase());
-      });//json parsing 부분 알기
-    }
-    else {
-      covidData.sort((b,a) {
-        return a.deaths.compareTo(b.deaths);
-      });
-    }
+
+
     return covidData;
   }
 }
