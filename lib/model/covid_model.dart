@@ -19,11 +19,6 @@ class CovidModel {
   Country get selectedCountry => _selectedCountry;
 
   // 외부에서 멤버 변수 값을 바꿀때는 이런 방식으로
-  set countries(List<Country> newCountries) {
-    _countries = newCountries;
-    _selectedCountry = _countries[0];
-  }
-
   set order(String newOrder) {
     _order = newOrder;
     orderDailyCovidStats(newOrder);
@@ -46,7 +41,7 @@ class CovidModel {
         break;
       case 'Highest':
         _dailyCovidStats.sort((a,b) {
-         return b.deaths.compareTo(a.deaths);
+         return b.confirmed.compareTo(a.confirmed);
         });
     }
   }
