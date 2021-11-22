@@ -1,28 +1,40 @@
-import 'package:covid_app/model/covid_model.dart';
+import 'package:covid_app/controller/main_page.dart';
+import 'package:covid_app/model/entity/country.dart';
+import 'package:covid_app/model/entity/covid_stats.dart';
 import 'package:flutter/material.dart';
 
 import 'package:covid_app/view/covid_data_page.dart';
-import 'package:covid_app/model/entity/covid_stats.dart';
-import 'package:covid_app/model/repository/covid_repository.dart';
 import 'package:covid_app/view/my_painter.dart';
-
+// 필요한 데이터 countries
 // TODO:: Loading 페이지 예시를 토대로 재구성 해보기
-class MainPage extends StatefulWidget {
-  MainPage({required this.model});
+class MainPageView extends StatefulWidget {
+  MainPageView({
+    required this.countries,
+    required this.dailyCovidStats,
+    required this.order,
+    required this.selectedCountry,
+    required this.maxConfirmed,
+    required this.controller,
+    Key? key}) : super(key: key);
 
-  CovidModel model;
+  List<Country> countries;
+  List<CovidStats> dailyCovidStats;
+  String order;
+  Country selectedCountry;
+  int maxConfirmed;
+  final MainPageController controller;
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _MainPageViewState createState() => _MainPageViewState();
 }
 
-class _MainPageState extends State<MainPage> {
-  late CovidModel model;
+class _MainPageViewState extends State<MainPageView> {
+  // late CovidModel model;
 
   @override
   void initState() {
     super.initState();
-    model = widget.model;
+    // model = widget.model;
   }
 
   @override
@@ -62,33 +74,18 @@ class _MainPageState extends State<MainPage> {
                 border: Border.all(color: Colors.grey, width: 5.0),
               ),
               child: DropdownButton(
-                  value: model.selectedCountry.country,
+                  value: widget.selectedCountry.country,
                   isExpanded: true,
                   style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20.0
                   ),
-                  // onChanged: (String? newValue) {
-                  //   setState(() {//어떠한 값을 가지고 잇다고 하고 state을 참조 데이터를 state에서 바꿔줘야한다 state가 변하면 여기서 data받아오는 것을 새롭게 한다 그러면 futur함수를 어디다 노아야 할지 생각해보자
-                  //     //list가 state가 list자체도 하나의 상태이니깐
-                  //     // getCountryCovid(widget.parseCountrySlug[widget.parseCountryName.indexOf(newValue!)], dropDownValueMenu).then((value) {
-                  //       // covidData = value;
-                  //       // }//! null 값 error null safety
-                  //     // );//type이 안맞아
-                  //     //future builder를 사용하면 이렇게 setState안에 넣어줘야 한다이것이 바뀌면 밑에 상태도 바뀐다 그러면 한번에 setState으로 묶어줘야지
-                  //     dropdownData.dropDownCountry = newValue!;
-                  //     //mvc패턴 역할의 완벽한 분리
-                  //   });
-                  // },
                   onChanged: (String? newValue) {
-                    setState(() {
-                      model.changeSelectCountry(model.selectedCountry, newValue!);
-                      // model.selectedCountry = model.countries[model.countries.indexWhere((country) => country.country == newValue)]!;//이것은 내가 model에서 setter를 정의하면 할 수 있는 행동
-                      model.fetchCovidSats();
-                    });
+                    widget.controller.onChangeSelectCountry(newValue!);
+                    // widget.controller.onFecthCovidStats();
                   },
                   // TODO:: Model에 맞게 items 값 수정함.
-                  items: model.countries.map((country) =>
+                  items: widget.countries.map((country) =>
                               DropdownMenuItem(
                                   value: country.country,
                                   child: Text(country.country)
@@ -108,20 +105,14 @@ class _MainPageState extends State<MainPage> {
                   border: Border.all(color: Colors.grey, width: 5.0),
                 ),
                 child: DropdownButton(
-                    value: model.order,
+                    value: widget.order,
                     isExpanded: true,
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 15.0
                     ),
                     onChanged: (String? newValue) {
-                      setState(() {
-                        // dropdownData.selectMenu(newValue!);
-                        //지금 변하는 것을 view자리에 햇는ㄴ데 setstate자리 자체를 controlloer로 옮기자
-                        // model.selectCountry(model., newValue)
-                        model.changeSelectOrder(newValue!);
-                        model.orderCovidStats();
-                      });
+                      widget.controller.onChangeSelectOrder(newValue!);
                     },
                     items: <String>['Oldest', 'Newest', 'Highest'].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
@@ -136,12 +127,12 @@ class _MainPageState extends State<MainPage> {
               child: ListView.separated(
                 padding: const EdgeInsets.all(8),
                 shrinkWrap: true,
-                itemCount: model.dailyCovidStats.length,
+                itemCount: widget.dailyCovidStats.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return DataPageDialog(date: model.dailyCovidStats[index].date, deaths: model.dailyCovidStats[index].deaths, confirmed: model.dailyCovidStats[index].confirmed, recovered: model.dailyCovidStats[index].recovered);
+                        return DataPageDialog(date: widget.dailyCovidStats[index].date, deaths: widget.dailyCovidStats[index].deaths, confirmed: widget.dailyCovidStats[index].confirmed, recovered: widget.dailyCovidStats[index].recovered);
                       }));
                     },
                     child: Container(
@@ -155,7 +146,7 @@ class _MainPageState extends State<MainPage> {
                             height: 20,
                             color: Colors.blueGrey,
                             child: Center(
-                              child: Text(model.dailyCovidStats[index].date,
+                              child: Text(widget.dailyCovidStats[index].date,
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   color: Colors.white,
@@ -166,7 +157,7 @@ class _MainPageState extends State<MainPage> {
                           Center(
                             child: CustomPaint(
                               // size: Size(confirmed[index].toDouble() / minConfirmed + 20, 0),
-                              size: Size(250 * model.dailyCovidStats[index].confirmed / model.maxConfirmed.toDouble(), 0),
+                              size: Size(250 * widget.dailyCovidStats[index].confirmed / widget.maxConfirmed.toDouble(), 0),
                               // size: Size(50, 0),
                               painter: MyPainter(),
                             ),

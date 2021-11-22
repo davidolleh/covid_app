@@ -11,6 +11,8 @@ class CovidModel {//왜 모델 안에 api불러오는 것을 두엇는지 밑에
   CovidRepository repository = CovidRepository();
 
   // TODO:: 앱에서 필요로 하는 데이터. 외부 접근을 막기위해 private 변수로 설정.
+  //model일 경우에는 data를 상태관리를 하는 친구 독립적으로 보자 상태는 남이 함부로 건들면 안됨
+  // 다른 친구가 이걸 함부로 바꾸면 안됨으로 살짝 1차적인 보안 장치
   List<Country> _countries = [];
   List<CovidStats> _dailyCovidStats = [];
   String _order = "Newest";
@@ -27,12 +29,17 @@ class CovidModel {//왜 모델 안에 api불러오는 것을 두엇는지 밑에
   //이것은 밑에 changeSelectCountry처럼 값을 넣기 위해 여기안에 만들어 놓은 거 같다 //데이터에 접근 하는 것이면 이것은 controller역할 인 거 같다
   //근데 밑에 것은 데이터를 그냥 넣는 것이고
   // 2번째 3번째는 값을 변경하는 것
+
+  // model이라는 것은 data에 관련된 하는 것은 맞는데 model은 데이터 저장 api와 관련된 외부에서 가져오는 것은 model에서 처리 중간에 함부로 건들면 안되기 때문에
+  //controller 는 어느 정도의 logic을 가지고 있는 것 interection model에서 어떤 함수를 호출해야될지
   Future<void> fetchCountries() async {
     _countries = await repository.getCountry();
     _countries.sort((a,b) {
       return a.country.toLowerCase().compareTo(b.country.toLowerCase());
     });
     _selectedCountry = _countries[0];
+    await fetchCovidStats();
+    orderCovidStats();
   }
 
   void orderCovidStats() {
@@ -54,18 +61,20 @@ class CovidModel {//왜 모델 안에 api불러오는 것을 두엇는지 밑에
     }
   }
 
-  Future<void> fetchCovidSats() async {
+  Future<void> fetchCovidStats() async {
     _dailyCovidStats = await repository.getCountryCovid(_selectedCountry.slug, _order);
-    orderCovidStats();
-    // _maxConfirmed = _dailyCovidStats.reduce((curr, next) => curr.confirmed > next.confirmed ? curr.confirmed : next.confirmed);
+    changeMaxConfirmed();
+  }
+
+  void changeMaxConfirmed() {
+    _maxConfirmed = 0;
     _dailyCovidStats.forEach((curr) {
       if (_maxConfirmed < curr.confirmed) {
         _maxConfirmed = curr.confirmed;
       }
     });
   }
-
-  void changeSelectCountry(Country selectedCountry ,String newValue) {
+  void changeSelectCountry(String newValue) {
     _selectedCountry = countries[countries.indexWhere((country) => country.country == newValue)];
   }
 

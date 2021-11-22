@@ -2,7 +2,7 @@ import 'package:covid_app/model/covid_model.dart';
 import 'package:covid_app/view/loading_view.dart';
 import 'package:flutter/material.dart';
 
-import 'package:covid_app/view/main_page.dart';
+import 'package:covid_app/controller/main_page.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -13,7 +13,9 @@ class Loading extends StatefulWidget {
 
 class LoadingController extends State<Loading> {
   // TODO:: 이 컨트롤러가 바라볼 Model
+  // 컨트롤러가 model이랑 view 연결 -> loading view 에서 가지고갈 데이터는 covid model을 가지고 view에게 데이터를 전달해주고
   // 컨트롤러가 바라볼 model이라는 것은 무엇인가?
+  //tree의 root leaf controller 가 root 왼쪽 view 오른쪽 model
   late CovidModel model;
 
   @override
@@ -42,8 +44,5 @@ class LoadingController extends State<Loading> {
       }
       ));
     });
-    // 원래는 받기 전에 한바퀴 돔 navigator가 밖에 있어서 먼저 다음페이지로 이동해보고 본다
-    // then whencomplete 자료들을 받은 다음 이것을 행동해라 async 받고 나서 다음페이지 넘겨주기
-    //비동기적 프로그램 flutter 공부하기
   }
 }
