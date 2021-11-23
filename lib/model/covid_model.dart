@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:covid_app/model/entity/country.dart';
 import 'package:covid_app/model/entity/covid_stats.dart';
 import 'package:covid_app/model/repository/covid_repository.dart';
@@ -63,17 +65,9 @@ class CovidModel {//왜 모델 안에 api불러오는 것을 두엇는지 밑에
 
   Future<void> fetchCovidStats() async {
     _dailyCovidStats = await repository.getCountryCovid(_selectedCountry.slug, _order);
-    changeMaxConfirmed();
+    _maxConfirmed = _dailyCovidStats.map((e) => e.confirmed).reduce(max);
   }
 
-  void changeMaxConfirmed() {
-    _maxConfirmed = 0;
-    _dailyCovidStats.forEach((curr) {
-      if (_maxConfirmed < curr.confirmed) {
-        _maxConfirmed = curr.confirmed;
-      }
-    });
-  }
   void changeSelectCountry(String newValue) {
     _selectedCountry = countries[countries.indexWhere((country) => country.country == newValue)];
   }
