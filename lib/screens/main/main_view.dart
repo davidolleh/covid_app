@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:covid_app/blocs/country/country_cubit.dart';
 import 'package:covid_app/blocs/covid_stats/covid_stats_bloc.dart';
 import 'package:covid_app/screens/data_page_dialog/data_page_dialog.dart';
-import 'package:covid_app/screens/data_page_dialog/my_painter.dart';
+import 'package:covid_app/screens/main/widgets/my_painter.dart';
 import 'package:covid_app/screens/main/widgets/country_dropdown_button.dart';
 import 'package:covid_app/screens/main/widgets/order_dropdown_button.dart';
 import 'package:covid_repository/covid_repository.dart';
