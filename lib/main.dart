@@ -1,22 +1,37 @@
+import 'package:covid_app/blocs/country/country_cubit.dart';
+import 'package:covid_app/screens/loading/loading_page.dart';
+import 'package:covid_repository/covid_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:covid_app/controller/loading_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  Bloc.observer;
+  CovidRepository covidRepository = CovidRepository();
+  runApp(CovidApp(covidRepository: covidRepository));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class CovidApp extends StatelessWidget {
+  final CovidRepository _covidRepository;
+
+  const CovidApp({required CovidRepository covidRepository, Key? key})
+      : _covidRepository = covidRepository, super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Covid',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-      ),
-      home: LoadingPage(),//page들은 stack통해 따로 관리가 필요 없애줄건 없애준다 느낌으로 loading창은 아예 없어져도 상관 없잖아
+    return RepositoryProvider.value(
+        value: _covidRepository,
+        child: BlocProvider(
+          create: (_) => CountryCubit(covidRepository: _covidRepository),
+          child: MaterialApp(
+            title: 'Covid',
+            theme: ThemeData(
+              primarySwatch: Colors.deepPurple,
+            ),
+            home: const LoadingPage(),
+          ),
+        )
     );
+
   }
 }

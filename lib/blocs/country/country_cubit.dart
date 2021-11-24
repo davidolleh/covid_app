@@ -5,18 +5,16 @@ import 'package:equatable/equatable.dart';
 part 'country_state.dart';
 
 class CountryCubit extends Cubit<CountryState> {
-  CountryCubit() : super(CountryInitial());
+  final CovidRepository _covidRepository;
+
+  CountryCubit({required CovidRepository covidRepository})
+      : _covidRepository = covidRepository, super(CountryInitial());
 
   Future<void> fetchCountries() async {
     emit(CountryLoadInProgress());
+    var newCountries = await _covidRepository.fetchCountries();
     try {
-      CovidRepository().fetchCountries()
-        ..then((newCountries) =>
-            emit(CountryLoadSuccess(countries: newCountries)))
-        ..onError((Exception error, stackTrace) {
-            emit(CountryLoadFailure());
-            return <Country>[];
-          });
+      emit(CountryLoadSuccess(newCountries: newCountries));
     } catch(e) {
       emit(CountryLoadFailure());
     }

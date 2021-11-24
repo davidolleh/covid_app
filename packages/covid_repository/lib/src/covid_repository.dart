@@ -6,6 +6,17 @@ import 'models/models.dart';
 
 class CovidRepository{
   final String covidApiUrl = 'https://api.covid19api.com/';
+  // TODO:: work out the stream
+  // List<Country>? _countries;
+  // List<CovidStats>? _dailyCovidStats;
+  //
+  // Stream<List<Country>> get countries async* {
+  //   yield _countries ?? await fetchCountries();
+  // }
+  //
+  // Stream<List<CovidStats>> getDailyCovidStats(String slug) async* {
+  //   yield await fetchCovidStats(slug);
+  // }
 
   Future<List<Country>> fetchCountries() async {
     String countryDataUrl = covidApiUrl + 'countries';
@@ -16,6 +27,8 @@ class CovidRepository{
                 (countryJson) => Country.fromJson(countryJson)
         )
     );
+    countries.sort((a,b) =>
+        a.country.toLowerCase().compareTo(b.country.toLowerCase()));
 
     return countries;
   }

@@ -4,7 +4,7 @@ part 'country.g.dart';
 
 @JsonSerializable()
 class Country {
-  Country({this.country='Barbados', this.slug='barbados', this.iso2='BB'});
+  const Country({this.country='Barbados', this.slug='barbados', this.iso2='BB'});
 
   @JsonKey(name: 'Country')
   final String country;
