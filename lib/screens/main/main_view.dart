@@ -4,6 +4,8 @@ import 'package:covid_app/blocs/country/country_cubit.dart';
 import 'package:covid_app/blocs/covid_stats/covid_stats_bloc.dart';
 import 'package:covid_app/screens/data_page_dialog/data_page_dialog.dart';
 import 'package:covid_app/screens/data_page_dialog/my_painter.dart';
+import 'package:covid_app/screens/main/widgets/country_dropdown_button.dart';
+import 'package:covid_app/screens/main/widgets/order_dropdown_button.dart';
 import 'package:covid_repository/covid_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,28 +58,7 @@ class MainView extends StatelessWidget {
                       color: Colors.white,
                       border: Border.all(color: Colors.grey, width: 5.0),
                     ),
-                    child: DropdownButton<Country>(
-                      hint: const Text('choose a country'),
-                      isExpanded: true,
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0
-                      ),
-                      onChanged: (Country? newCountry) {
-                        context.read<CovidStatsBloc>().add(
-                            CovidStatsRequested(
-                                selectedCountry: newCountry!
-                            )
-                        );
-                      },
-                      items: countries.map(
-                              (Country c) =>
-                              DropdownMenuItem(
-                                value: c,
-                                child: Text(c.country),
-                              )
-                      ).toList(),
-                    ),
+                    child: CountryDropdownButton(countries: countries),
                   ),
                   Align(
                     // alignment: Alignment.centerRight,
@@ -90,32 +71,7 @@ class MainView extends StatelessWidget {
                         color: Colors.white,
                         border: Border.all(color: Colors.grey, width: 5.0),
                       ),
-                      child: DropdownButton(
-                          value: 'Newest',
-                          isExpanded: true,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 15.0
-                          ),
-                          onChanged: (String? newOrder) {
-                            var covidStatsBloc = context.read<CovidStatsBloc>();
-                            if(covidStatsBloc.state is CovidStatsLoadSuccess){
-                              covidStatsBloc.add(
-                                  CovidStatsOrderSelected(
-                                      order: newOrder!,
-                                      selectedCountry: covidStatsBloc.state.selectedCountry!,
-                                      dailyCovidStats: covidStatsBloc.state.dailyCovidStats!
-                                  )
-                              );
-                            }
-                          },
-                          items: ['Oldest', 'Newest', 'Highest'].map((String orderType) {
-                            return DropdownMenuItem(
-                              value: orderType,
-                              child: Text(orderType),
-                            );
-                          }).toList()
-                      ),
+                      child: const OrderDropdownButton(),
                     ),
                   ),
                   BlocBuilder<CovidStatsBloc, CovidStatsState>(

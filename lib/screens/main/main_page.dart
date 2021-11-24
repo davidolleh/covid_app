@@ -18,7 +18,7 @@ class MainPage extends StatelessWidget {
     _covidStatsBloc.add(
         CovidStatsRequested(
             selectedCountry:
-              context.read<CountryCubit>().state.countries[0]
+              context.read<CountryCubit>().state.countries[0],
         )
     );
     return BlocProvider.value(
