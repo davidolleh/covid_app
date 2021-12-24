@@ -1,5 +1,9 @@
+import 'package:covid_app/bloc/countries/countries_bloc.dart';
+import 'package:covid_app/bloc/covid_stats/covid_stats_bloc.dart';
+import 'package:covid_app/model/repository/covid_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:covid_app/controller/loading.dart';
+import 'package:covid_app/screen/loading_screen/loading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 void main() {
@@ -11,12 +15,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Covid',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+    CovidRepository repository = CovidRepository();
+    return BlocProvider(
+      create: (_) => CountriesBloc(repository),
+      child: MaterialApp(
+        title: 'Covid',
+        theme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+        ),
+        home: Loading(repository: repository),
       ),
-      home: Loading(),//page들은 stack통해 따로 관리가 필요 없애줄건 없애준다 느낌으로 loading창은 아예 없어져도 상관 없잖아
     );
   }
 }
