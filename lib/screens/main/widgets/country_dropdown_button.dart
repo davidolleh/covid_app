@@ -32,22 +32,26 @@ class _CountryDropdownButtonState extends State<CountryDropdownButton> {
           fontSize: 20.0
       ),
       onChanged: (Country? newCountry) {
-        context.read<CovidStatsBloc>().add(
-            CovidStatsRequested(
-                selectedCountry: newCountry!
-            )
-        );
-        setState(() {
-          selectedCountry = newCountry;
-        });
-      },
-      items: widget.countries.map(
-              (Country c) =>
-              DropdownMenuItem(
-                value: c,
-                child: Text(c.country),
+        if(newCountry != null){
+          context.read<CovidStatsBloc>().add(
+              CovidStatsRequested(
+                  selectedCountry: newCountry
               )
-      ).toList(),
+          );
+          setState(() {
+            selectedCountry = newCountry;
+          });
+        }
+      },
+      items: List.from(
+          widget.countries.map(
+              (Country c) =>
+                  DropdownMenuItem(
+                    value: c,
+                    child: Text(c.country),
+                  )
+          )
+      ),
     );
   }
 }
