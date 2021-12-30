@@ -2,10 +2,7 @@ import 'dart:math';
 
 import 'package:covid_app/blocs/country/country_cubit.dart';
 import 'package:covid_app/blocs/covid_stats/covid_stats_bloc.dart';
-import 'package:covid_app/screens/data_page_dialog/data_page_dialog.dart';
-import 'package:covid_app/screens/main/widgets/my_painter.dart';
-import 'package:covid_app/screens/main/widgets/country_dropdown_button.dart';
-import 'package:covid_app/screens/main/widgets/order_dropdown_button.dart';
+import 'package:covid_app/screens/main/widgets/widgets.dart';
 import 'package:covid_repository/covid_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +25,7 @@ class MainView extends StatelessWidget {
             resizeToAvoidBottomInset : false,
             backgroundColor: Colors.black,
             appBar: AppBar(
-              title: const Text('covid'),
+              title: const Text('COVID'),
             ),
             body: Center(
               child: Column(
@@ -88,14 +85,17 @@ class MainView extends StatelessWidget {
                                 int maxConfirmed = state.dailyCovidStats!.map((e) => e.confirmed).reduce(max);
                                 return GestureDetector(
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                      List<CovidStats> dailyCovidStats = state.dailyCovidStats!;
-                                      return DataPageDialog(
-                                          date: dailyCovidStats[index].date,
-                                          deaths: dailyCovidStats[index].deaths,
-                                          confirmed: dailyCovidStats[index].confirmed,
-                                          recovered: dailyCovidStats[index].recovered);
-                                    }));
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          List<CovidStats> dailyCovidStats = state.dailyCovidStats!;
+                                          return DataPageDialog(
+                                              date: dailyCovidStats[index].date,
+                                              deaths: dailyCovidStats[index].deaths,
+                                              confirmed: dailyCovidStats[index].confirmed,
+                                              recovered: dailyCovidStats[index].recovered);
+                                        }
+                                    );
                                   },
                                   child: Container(
                                     height: 30,
@@ -149,7 +149,8 @@ class MainView extends StatelessWidget {
           );
         } else {
           return const Expanded(
-            child: Text('Loading',
+            child: Text(
+              'Loading',
               style: TextStyle(
                 color: Colors.white
               ),
