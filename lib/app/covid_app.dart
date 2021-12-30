@@ -1,3 +1,4 @@
+import 'package:covid_app/app/theme.dart';
 import 'package:covid_app/blocs/country/country_cubit.dart';
 import 'package:covid_app/routes/app_router.dart';
 import 'package:covid_repository/covid_repository.dart';
@@ -27,9 +28,7 @@ class CovidApp extends StatelessWidget {
               routeInformationParser: _router.defaultRouteParser(),
               routerDelegate: _router.delegate(),
               title: 'COVID',
-              theme: ThemeData(
-                primarySwatch: Colors.deepPurple
-              ),
+              theme: appTheme,
             )
         )
     );
