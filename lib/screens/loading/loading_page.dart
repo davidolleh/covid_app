@@ -16,7 +16,7 @@ class LoadingPage extends StatelessWidget {
     return BlocListener<CountryCubit, CountryState>(
       listener: (BuildContext context, state) {
         if(state is CountryLoadSuccess){
-          context.pushRoute(MainRoute());
+          context.replaceRoute(MainRoute());
         }
       },
       child: const LoadingView(),
