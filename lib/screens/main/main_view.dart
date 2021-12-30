@@ -29,6 +29,7 @@ class MainView extends StatelessWidget {
             ),
             body: Center(
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Container(
                     width: 250.0,
@@ -77,7 +78,15 @@ class MainView extends StatelessWidget {
                       builder: (context, state) {
                         if(state is CovidStatsLoadSuccess || state is CovidStatsOrderSuccess){
                           return Expanded(
-                            child: ListView.separated(
+                            child:
+                            state.dailyCovidStats == null || state.dailyCovidStats!.isEmpty ?
+                                const Text(
+                                    'No Data Found',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
+                                )
+                                : ListView.separated(
                               padding: const EdgeInsets.all(8),
                               shrinkWrap: true,
                               itemCount: state.dailyCovidStats?.length ?? 0,
@@ -138,7 +147,9 @@ class MainView extends StatelessWidget {
                           );
                         } else {
                           return const Expanded(
-                            child: Text('loading'),
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
                           );
                         }
                       }
@@ -148,13 +159,8 @@ class MainView extends StatelessWidget {
             ),
           );
         } else {
-          return const Expanded(
-            child: Text(
-              'Loading',
-              style: TextStyle(
-                color: Colors.white
-              ),
-            ),
+          return const Center(
+            child: CircularProgressIndicator()
           );
         }
       }
