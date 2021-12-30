@@ -12,15 +12,18 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<CountryCubit>().fetchCountries()
-      .then((_) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => MainPage())
-        );
-    });
-
-    return const LoadingView();
+    context.read<CountryCubit>().fetchCountries();
+    return BlocListener<CountryCubit, CountryState>(
+      listener: (BuildContext context, state) {
+        if(state is CountryLoadSuccess){
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => MainPage())
+          );
+        }
+      },
+      child: const LoadingView(),
+    );
   }
 
 }

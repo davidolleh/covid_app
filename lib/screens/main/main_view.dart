@@ -58,7 +58,9 @@ class MainView extends StatelessWidget {
                       color: Colors.white,
                       border: Border.all(color: Colors.grey, width: 5.0),
                     ),
-                    child: CountryDropdownButton(countries: countries),
+                    child: CountryDropdownButton(
+                      countries: countries,
+                    ),
                   ),
                   Align(
                     // alignment: Alignment.centerRight,
