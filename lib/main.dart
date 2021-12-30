@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 void main() {
-  Bloc.observer;
   CovidRepository covidRepository = CovidRepository();
   runApp(CovidApp(covidRepository: covidRepository));
 }
