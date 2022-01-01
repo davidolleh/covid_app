@@ -66,84 +66,46 @@ class MainView extends StatelessWidget {
                     child: Container(
                       width: 100.0,
                       height: 30.0,
-                      margin: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 20.0,
+                          horizontal: 20.0
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        border: Border.all(color: Colors.grey, width: 5.0),
+                        border: Border.all(
+                            color: Colors.grey,
+                            width: 5.0
+                        ),
                       ),
                       child: const OrderDropdownButton(),
                     ),
                   ),
                   BlocBuilder<CovidStatsBloc, CovidStatsState>(
                       builder: (context, state) {
-                        if(state is CovidStatsLoadSuccess || state is CovidStatsOrderSuccess){
+                        if(state is CovidStatsLoadSuccess ||
+                            state is CovidStatsOrderSuccess
+                        ){
                           return Expanded(
                             child:
-                            state.dailyCovidStats == null || state.dailyCovidStats!.isEmpty ?
+                            state.dailyCovidStats == null ||
+                                state.dailyCovidStats!.isEmpty ?
                                 const Text(
-                                    'No Data Found',
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),
-                                )
-                                : ListView.separated(
-                              padding: const EdgeInsets.all(8),
-                              shrinkWrap: true,
-                              itemCount: state.dailyCovidStats?.length ?? 0,
-                              itemBuilder: (BuildContext context, int index) {
-                                int maxConfirmed = state.dailyCovidStats!.map((e) => e.confirmed).reduce(max);
-                                return GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          List<CovidStats> dailyCovidStats = state.dailyCovidStats!;
-                                          return DataPageDialog(
-                                              date: dailyCovidStats[index].date,
-                                              deaths: dailyCovidStats[index].deaths,
-                                              confirmed: dailyCovidStats[index].confirmed,
-                                              recovered: dailyCovidStats[index].recovered);
-                                        }
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    color: Colors.purple,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(left: 8, right: 8),
-                                          width: 100,
-                                          height: 20,
-                                          color: Colors.blueGrey,
-                                          child: Center(
-                                            child: Text(state.dailyCovidStats![index].date,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Row(
-                                            children: [
-                                              CustomPaint(
-                                                size: Size(250 * state.dailyCovidStats![index].confirmed / maxConfirmed.toDouble(), 0),
-                                                painter: MyPainter(),
-                                              ),
-                                            ]
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (BuildContext context, int index) => const Divider(
-                                height: 8,
-                              ),
-                            ),
+                                  'No Data Found',
+                                  style: TextStyle(color: Colors.white),
+                                ) :
+                                ListView.separated(
+                                  padding: const EdgeInsets.all(8),
+                                  shrinkWrap: true,
+                                  itemCount: state.dailyCovidStats?.length ?? 0,
+                                  itemBuilder: (context, index) =>
+                                      buildDailyStatsItems(
+                                          context,
+                                          index,
+                                          state
+                                      ),
+                                  separatorBuilder: (_,__) =>
+                                      const Divider(height: 8,),
+                                ),
                           );
                         } else {
                           return const Expanded(
@@ -164,6 +126,54 @@ class MainView extends StatelessWidget {
           );
         }
       }
+    );
+  }
+
+  Widget buildDailyStatsItems(BuildContext context, int index, CovidStatsState state) {
+    int maxConfirmed = state.dailyCovidStats!.map((e) => e.confirmed).reduce(max);
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return DataPageDialog(
+                covidStat: state.dailyCovidStats![index],
+              );
+            }
+        );
+      },
+      child: Container(
+        height: 30,
+        color: Colors.purple,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 8, right: 8),
+              width: 100,
+              height: 20,
+              color: Colors.blueGrey,
+              child: Center(
+                child: Text(state.dailyCovidStats![index].date,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            CustomPaint(
+              size: Size(
+                  250 * state.dailyCovidStats![index].confirmed
+                      / maxConfirmed.toDouble(),
+                  0
+              ),
+              painter: MyPainter(),
+            ),
+          ],
+        ),
+      ),
     );
 
   }
