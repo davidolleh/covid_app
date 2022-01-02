@@ -95,12 +95,13 @@ class MainView extends StatelessWidget{
                                   padding: const EdgeInsets.all(8),
                                   shrinkWrap: true,
                                   itemCount: state.dailyCovidStats?.length ?? 0,
-                                  itemBuilder: (context, index) =>
-                                      buildDailyStatsItems(
-                                          context,
-                                          index,
-                                          state
-                                      ),
+                                  itemBuilder: (context, index) {
+                                    return buildDailyStatsItems(
+                                        context,
+                                        index,
+                                        state.dailyCovidStats!
+                                    );
+                                  },
                                   separatorBuilder: (_,__) =>
                                       const Divider(height: 8,),
                                 ),
@@ -136,22 +137,22 @@ class MainView extends StatelessWidget{
     );
   }
 
-  Widget buildDailyStatsItems(BuildContext context, int index, CovidStatsState state) {
-    int maxConfirmed = state.dailyCovidStats!.map((e) => e.confirmed).reduce(max);
+  Widget buildDailyStatsItems(BuildContext context, int index, List<CovidStats> dailyCovidStats) {
+    int maxConfirmed = dailyCovidStats.map((e) => e.confirmed).reduce(max);
     return GestureDetector(
       onTap: () {
         showDialog(
             context: context,
             builder: (context) {
               return DataPageDialog(
-                covidStat: state.dailyCovidStats![index],
+                covidStat: dailyCovidStats[index],
               );
             }
         );
       },
       child: DailyCovidStatsItem(
-        date: state.dailyCovidStats![index].date,
-        ratioToMax: state.dailyCovidStats![index].confirmed
+        date: dailyCovidStats[index].date,
+        ratioToMax: dailyCovidStats[index].confirmed
             / maxConfirmed.toDouble(),
       )
     );
