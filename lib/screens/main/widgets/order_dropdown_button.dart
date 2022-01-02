@@ -52,6 +52,7 @@ class _OrderDropdownButtonState extends State<OrderDropdownButton> {
                 child: Text(
                     orderType,
                   textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyText1,
                 )
             ),
           );

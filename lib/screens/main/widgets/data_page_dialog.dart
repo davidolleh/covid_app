@@ -1,6 +1,34 @@
 import 'package:covid_repository/covid_repository.dart';
 import 'package:flutter/material.dart';
 
+class DataRow extends StatelessWidget {
+  final String type;
+  final int number;
+  const DataRow({
+    required this.type,
+    required this.number,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          type,
+          style: Theme.of(context).textTheme.headline1,
+        ),
+        Text(
+          '$number 명',
+          style: Theme.of(context).textTheme.headline1,
+        ),
+      ],
+    );
+  }
+}
+
+
 class DataPageDialog extends StatelessWidget {
   final CovidStats covidStat;
 
@@ -26,6 +54,7 @@ class DataPageDialog extends StatelessWidget {
       width: 300.0,
       height: 400.0,
       color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget> [
@@ -35,76 +64,24 @@ class DataPageDialog extends StatelessWidget {
           Text(
             covidStat.date,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 20.0,
-              color: Colors.black,
-            ),
+            style: Theme.of(context).textTheme.headline1,
           ),
           const SizedBox(
             height: 30,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [//logic 속에서 값을 controller 로 들어가는 것이다.
-              const Text(
-                '감염자',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                covidStat.confirmed.toString() + '명',
-                style: const TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                ),
-              ),
-            ],
+          DataRow(
+              type: '감염자',
+              number: covidStat.confirmed
           ),
-          const SizedBox(
-            height: 40,
+          const Spacer(),
+          DataRow(
+              type: '완치',
+              number: covidStat.recovered
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text(
-                '완치',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                covidStat.recovered.toString() + '명',
-                style: const TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 40,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text(
-                '사망',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                covidStat.deaths.toString() + '명',
-                style: const TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                ),
-              ),
-            ],
+          const Spacer(),
+          DataRow(
+              type: '사망',
+              number: covidStat.deaths
           ),
           const Spacer(),
           TextButton(

@@ -39,13 +39,10 @@ class MainView extends StatelessWidget{
                       color: Colors.white,
                       border: Border.all(color: Colors.grey, width: 5.0),
                     ),
-                    child: const Center(
+                    child: Center(
                       child:  Text(
                         'COVID STATISTICS',
-                        style:  TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                        ),
+                        style: Theme.of(context).textTheme.headline1,
                       ),
                     ),
                   ),
@@ -87,9 +84,9 @@ class MainView extends StatelessWidget{
                           return Expanded(
                             child: state.dailyCovidStats == null ||
                                 state.dailyCovidStats!.isEmpty ?
-                                const Text(
+                                  Text(
                                   'No Data Found',
-                                  style: TextStyle(color: Colors.white),
+                                  style: Theme.of(context).textTheme.headline1,
                                 ) :
                                 ListView.separated(
                                   padding: const EdgeInsets.all(8),
@@ -124,7 +121,10 @@ class MainView extends StatelessWidget{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Loading Failed, click the button below to reload'),
+                Text(
+                    'Loading Failed, click the button below to reload',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
                 IconButton(
                     onPressed: () => context.read<CountryCubit>().fetchCountries(),
                     icon: const Icon(Icons.restart_alt)

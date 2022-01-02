@@ -29,17 +29,12 @@ class DailyCovidStatsItem extends StatelessWidget {
               child: Text(
                 date,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
+                style: Theme.of(context).textTheme.bodyText2,
               ),
             ),
           ),
           CustomPaint(
-            size: Size(
-                250 * ratioToMax,
-                0
-            ),
+            size: Size(250 * ratioToMax, 0),
             painter: MyPainter(),
           ),
         ],

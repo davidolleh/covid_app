@@ -52,6 +52,7 @@ class _CountryDropdownButtonState extends State<CountryDropdownButton> {
                       child: Text(
                           c.country,
                         textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline1,
                       ),
                     ),
                   )
