@@ -7,6 +7,34 @@ import 'package:covid_repository/covid_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+class GreyContainer extends StatelessWidget {
+  final double width;
+  final double height;
+  final Widget child;
+  const GreyContainer({
+    this.width = 250.0,
+    this.height = 50.0,
+    required this.child,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey, width: 5.0),
+      ),
+      child: Center(
+        child: child,
+      ),
+    );
+  }
+}
+
+
 class MainView extends StatelessWidget{
   const MainView({
     Key? key
@@ -31,49 +59,37 @@ class MainView extends StatelessWidget{
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Container(
-                    width: 250.0,
-                    height: 50.0,
-                    margin: const EdgeInsets.symmetric(vertical: 20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey, width: 5.0),
-                    ),
-                    child: Center(
-                      child:  Text(
-                        'COVID STATISTICS',
-                        style: Theme.of(context).textTheme.headline1,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: GreyContainer(
+                      child: Center(
+                        child:  Text(
+                          'COVID STATISTICS',
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    width: 250.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey, width: 5.0),
-                    ),
-                    child: CountryDropdownButton(
-                      countries: countries,
+                  GreyContainer(
+                    child: Center(
+                      child: CountryDropdownButton(
+                        countries: countries,
+                      ),
                     ),
                   ),
-                  Align(
+                  const Align(
                     // alignment: Alignment.centerRight,
                     alignment: Alignment.centerRight,
-                    child: Container(
-                      width: 100.0,
-                      height: 30.0,
-                      margin: const EdgeInsets.symmetric(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
                           vertical: 20.0,
                           horizontal: 20.0
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                            color: Colors.grey,
-                            width: 5.0
-                        ),
+                      child: GreyContainer(
+                        width: 100.0,
+                        height: 30.0,
+                        child: OrderDropdownButton(),
                       ),
-                      child: const OrderDropdownButton(),
                     ),
                   ),
                   BlocBuilder<CovidStatsBloc, CovidStatsState>(
@@ -126,6 +142,7 @@ class MainView extends StatelessWidget{
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 IconButton(
+                    // TODO:: set state maybe?
                     onPressed: () => context.read<CountryCubit>().fetchCountries(),
                     icon: const Icon(Icons.restart_alt)
                 )
