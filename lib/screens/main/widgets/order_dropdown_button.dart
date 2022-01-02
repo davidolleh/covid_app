@@ -25,10 +25,7 @@ class _OrderDropdownButtonState extends State<OrderDropdownButton> {
     return DropdownButton(
         value: currentOrder,
         isExpanded: true,
-        style: const TextStyle(
-            color: Colors.black,
-            fontSize: 15.0
-        ),
+        style: Theme.of(context).textTheme.bodyText1,
         onChanged: (String? newOrder) {
           var covidStatsBloc = context.read<CovidStatsBloc>();
           if(covidStatsBloc.state is CovidStatsLoadSuccess ||
