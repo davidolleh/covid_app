@@ -66,7 +66,7 @@ class CovidStatsLoadFailure extends CovidStatsState {
 
   final Country _attemptedCountry;
 
-  CovidStatsLoadFailure({required Country attemptedCountry})
+  const CovidStatsLoadFailure({required Country attemptedCountry})
       : _attemptedCountry = attemptedCountry;
 
   @override

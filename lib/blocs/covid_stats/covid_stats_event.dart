@@ -1,13 +1,14 @@
 part of 'covid_stats_bloc.dart';
 
 abstract class CovidStatsEvent extends Equatable {
-  const CovidStatsEvent();
+  final Country selectedCountry;
+
+  const CovidStatsEvent({required this.selectedCountry});
 }
 
 class CovidStatsRequested extends CovidStatsEvent {
-  final Country selectedCountry;
-
-  const CovidStatsRequested({required this.selectedCountry});
+  const CovidStatsRequested({required Country selectedCountry}) :
+      super(selectedCountry: selectedCountry);
 
   @override
   List<Object?> get props => [selectedCountry];
@@ -16,14 +17,13 @@ class CovidStatsRequested extends CovidStatsEvent {
 
 class CovidStatsOrderSelected extends CovidStatsEvent {
   final String order;
-  final Country selectedCountry;
   final List<CovidStats> dailyCovidStats;
 
   const CovidStatsOrderSelected({
     required this.order,
-    required this.selectedCountry,
+    required Country selectedCountry,
     required this.dailyCovidStats
-  });
+  }) : super(selectedCountry: selectedCountry);
 
   @override
   List<Object?> get props => [order, selectedCountry, dailyCovidStats];
