@@ -149,38 +149,11 @@ class MainView extends StatelessWidget{
             }
         );
       },
-      child: Container(
-        height: 30,
-        color: Colors.purple,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(left: 8, right: 8),
-              width: 100,
-              height: 20,
-              color: Colors.blueGrey,
-              child: Center(
-                child: Text(state.dailyCovidStats![index].date,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            CustomPaint(
-              size: Size(
-                  250 * state.dailyCovidStats![index].confirmed
-                      / maxConfirmed.toDouble(),
-                  0
-              ),
-              painter: MyPainter(),
-            ),
-          ],
-        ),
-      ),
+      child: DailyCovidStatsItem(
+        date: state.dailyCovidStats![index].date,
+        ratioToMax: state.dailyCovidStats![index].confirmed
+            / maxConfirmed.toDouble(),
+      )
     );
 
   }
