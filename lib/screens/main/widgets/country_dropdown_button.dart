@@ -13,7 +13,7 @@ class CountryDropdownButton extends StatefulWidget {
 }
 
 class _CountryDropdownButtonState extends State<CountryDropdownButton> {
-  late Country selectedCountry;
+  Country? selectedCountry;
 
   @override
   void initState() {
@@ -48,7 +48,12 @@ class _CountryDropdownButtonState extends State<CountryDropdownButton> {
               (Country c) =>
                   DropdownMenuItem(
                     value: c,
-                    child: Text(c.country),
+                    child: Center(
+                      child: Text(
+                          c.country,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   )
           )
       ),

@@ -31,7 +31,8 @@ class _OrderDropdownButtonState extends State<OrderDropdownButton> {
         ),
         onChanged: (String? newOrder) {
           var covidStatsBloc = context.read<CovidStatsBloc>();
-          if(covidStatsBloc.state is CovidStatsLoadSuccess || covidStatsBloc.state is CovidStatsOrderSuccess){
+          if(covidStatsBloc.state is CovidStatsLoadSuccess ||
+              covidStatsBloc.state is CovidStatsOrderSuccess) {
             covidStatsBloc.add(
                 CovidStatsOrderSelected(
                     order: newOrder!,
@@ -47,7 +48,12 @@ class _OrderDropdownButtonState extends State<OrderDropdownButton> {
         items: widget.orders.map((String orderType) {
           return DropdownMenuItem(
             value: orderType,
-            child: Text(orderType),
+            child: Center(
+                child: Text(
+                    orderType,
+                  textAlign: TextAlign.center,
+                )
+            ),
           );
         }).toList()
     );

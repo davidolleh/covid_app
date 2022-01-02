@@ -7,7 +7,7 @@ import 'package:covid_repository/covid_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MainView extends StatelessWidget {
+class MainView extends StatelessWidget{
   const MainView({
     Key? key
   }) : super(key: key);
@@ -51,7 +51,6 @@ class MainView extends StatelessWidget {
                   ),
                   Container(
                     width: 250.0,
-                    height: 100.0,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.grey, width: 5.0),
@@ -86,8 +85,7 @@ class MainView extends StatelessWidget {
                             state is CovidStatsOrderSuccess
                         ){
                           return Expanded(
-                            child:
-                            state.dailyCovidStats == null ||
+                            child: state.dailyCovidStats == null ||
                                 state.dailyCovidStats!.isEmpty ?
                                 const Text(
                                   'No Data Found',
@@ -121,8 +119,17 @@ class MainView extends StatelessWidget {
             ),
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator()
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Loading Failed, click the button below to reload'),
+                IconButton(
+                    onPressed: () => context.read<CountryCubit>().fetchCountries(),
+                    icon: const Icon(Icons.restart_alt)
+                )
+              ],
+            )
           );
         }
       }
