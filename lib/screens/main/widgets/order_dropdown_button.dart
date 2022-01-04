@@ -28,13 +28,12 @@ class _OrderDropdownButtonState extends State<OrderDropdownButton> {
         style: Theme.of(context).textTheme.bodyText1,
         onChanged: (String? newOrder) {
           var covidStatsBloc = context.read<CovidStatsBloc>();
-          if(covidStatsBloc.state is CovidStatsLoadSuccess ||
-              covidStatsBloc.state is CovidStatsOrderSuccess) {
+          if(covidStatsBloc.state is CovidStatsUpdateSuccess) {
             covidStatsBloc.add(
                 CovidStatsOrderSelected(
                     order: newOrder!,
                     selectedCountry: covidStatsBloc.state.selectedCountry!,
-                    dailyCovidStats: covidStatsBloc.state.dailyCovidStats!
+                    dailyCovidStats: covidStatsBloc.state.dailyCovidStats
                 )
             );
             setState(() {

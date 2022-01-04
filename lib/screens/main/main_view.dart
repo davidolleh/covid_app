@@ -94,12 +94,10 @@ class MainView extends StatelessWidget{
                   ),
                   BlocBuilder<CovidStatsBloc, CovidStatsState>(
                       builder: (context, state) {
-                        if(state is CovidStatsLoadSuccess ||
-                            state is CovidStatsOrderSuccess
-                        ){
+                        if(state is CovidStatsUpdateSuccess){
                           return Expanded(
                             child: state.dailyCovidStats == null ||
-                                state.dailyCovidStats!.isEmpty ?
+                                state.dailyCovidStats.isEmpty ?
                                   Text(
                                   'No Data Found',
                                   style: Theme.of(context).textTheme.headline1,
@@ -107,12 +105,12 @@ class MainView extends StatelessWidget{
                                 ListView.separated(
                                   padding: const EdgeInsets.all(8),
                                   shrinkWrap: true,
-                                  itemCount: state.dailyCovidStats?.length ?? 0,
+                                  itemCount: state.dailyCovidStats.length,
                                   itemBuilder: (context, index) {
                                     return buildDailyStatsItems(
                                         context,
                                         index,
-                                        state.dailyCovidStats!
+                                        state.dailyCovidStats
                                     );
                                   },
                                   separatorBuilder: (_,__) =>
