@@ -1,20 +1,9 @@
+import 'package:covid_app/model/repository/covid_repository.dart';
 import 'package:covid_app/routes/app_router.dart';
+import 'package:covid_app/screen1/app/covid_app.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(CovidApp(covidRepository: CovidRepository(), appRouter: AppRouter()));
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  final _appRouter = AppRouter();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-        routeInformationParser: _appRouter.defaultRouteParser(),
-        routerDelegate: _appRouter.delegate(),
-    );
-  }
-}

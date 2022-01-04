@@ -1,42 +1,42 @@
-import 'package:covid_app/model/repository/covid_repository.dart';
-import 'package:covid_app/screen/sub_page/error_page.dart';
-import 'package:covid_app/screen/loading_screen/loading_view.dart';
-import 'package:covid_app/screen/main_page/main_page_view.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-class MainPage extends StatelessWidget {
-  final CovidRepository repository;
-  final List<Country> countries;
-  final String order;
-
-  const MainPage({required this.countries ,required this.repository, required this.order, Key? key}) : super(key: key);
-
-  // CovidStatsBloc covidStatsBloc = CovidStatsBloc(country, repository, order)
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (_) => CovidStatsBloc(countries, repository, "Newest"),
-      child: BlocBuilder<CovidStatsBloc, CovidStatsState>(
-          builder: (context, state) {
-            if (state is CovidStatsInitial) {
-              context.read<CovidStatsBloc>().add(FetchCovidStats());
-            }
-            else if (state is CovidStatsLoading) {
-              return LoadingView();
-            }
-            else if (state is CovidStatsSuccess) {
-              return const MainPageView();
-            }
-            else if (state is CovidStatsError) {
-              return ErrorView(message: state.message);
-            }
-            return Container();
-          }
-      ),
-    );
-  }
+// import 'package:covid_app/model/repository/covid_repository.dart';
+// import 'package:covid_app/screen/sub_page/error_page.dart';
+// import 'package:covid_app/screen/loading_screen/loading_view.dart';
+// import 'package:covid_app/screen/main_page/main_page_view.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+//
+// class MainPage extends StatelessWidget {
+//   final CovidRepository repository;
+//   final List<Country> countries;
+//   final String order;
+//
+//   const MainPage({required this.countries ,required this.repository, required this.order, Key? key}) : super(key: key);
+//
+//   // CovidStatsBloc covidStatsBloc = CovidStatsBloc(country, repository, order)
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocProvider(
+//         create: (_) => CovidStatsBloc(countries, repository, "Newest"),
+//       child: BlocBuilder<CovidStatsBloc, CovidStatsState>(
+//           builder: (context, state) {
+//             if (state is CovidStatsInitial) {
+//               context.read<CovidStatsBloc>().add(FetchCovidStats());
+//             }
+//             else if (state is CovidStatsLoading) {
+//               return LoadingView();
+//             }
+//             else if (state is CovidStatsSuccess) {
+//               return const MainPageView();
+//             }
+//             else if (state is CovidStatsError) {
+//               return ErrorView(message: state.message);
+//             }
+//             return Container();
+//           }
+//       ),
+//     );
+//   }
   // @override
   // Widget build(BuildContext context) {
   //   return BlocProvider.value(
@@ -66,4 +66,4 @@ class MainPage extends StatelessWidget {
   //     ),
   //   );
   // }
-}
+// }

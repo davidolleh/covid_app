@@ -64,7 +64,7 @@ class CovidModel {//왜 모델 안에 api불러오는 것을 두엇는지 밑에
   }
 
   Future<void> fetchCovidStats() async {
-    _dailyCovidStats = await repository.getCountryCovid(_selectedCountry.slug, _order);
+    _dailyCovidStats = await repository.getCountryCovid(_selectedCountry.slug);
     _maxConfirmed = _dailyCovidStats.map((e) => e.confirmed).reduce(max);
   }
 
