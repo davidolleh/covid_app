@@ -20,7 +20,7 @@ class CovidRepository{
   }
 
 // TODO:: Entity 이름 바꿨으니 이 함수 이름도 바꿔봐(Refactor -> Rename)
-  Future<List<CovidStats>> getCountryCovid(String countrySlug, String dropDownValueMenu) async {
+  Future<List<CovidStats>> getCountryCovid(String countrySlug) async {
     String countryDataCovidUrl =
         'https://api.covid19api.com/live/country/$countrySlug/status/confirmed/date/2020-03-21T13:13:30Z';
     final http.Response response = await http.get(Uri.parse(countryDataCovidUrl));

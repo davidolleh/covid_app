@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 class DataPageDialog extends StatefulWidget {
-  // const DataPage({Key? key}) : super(key: key);
-  DataPageDialog({required this.date, required this.deaths, required this.confirmed, required this.recovered});
+  const DataPageDialog({required this.date, required this.deaths, required this.confirmed, required this.recovered, Key? key}): super(key: key);
 
-  String date;
-  int deaths;
-  int confirmed;
-  int recovered;
+  final String date;
+  final int deaths;
+  final int confirmed;
+  final int recovered;
 
   @override
   _DataPageDialogState createState() => _DataPageDialogState();
@@ -50,7 +49,7 @@ class _DataPageDialogState extends State<DataPageDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [//logic 속에서 값을 controller 로 들어가는 것이다.
                     const Text('감염자',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20.0,
                         color: Colors.black,
                       ),
@@ -70,7 +69,7 @@ class _DataPageDialogState extends State<DataPageDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     const Text('완치',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20.0,
                         color: Colors.black,
                       ),
@@ -90,7 +89,7 @@ class _DataPageDialogState extends State<DataPageDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     const Text('사망',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20.0,
                         color: Colors.black,
                       ),
@@ -103,7 +102,7 @@ class _DataPageDialogState extends State<DataPageDialog> {
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();

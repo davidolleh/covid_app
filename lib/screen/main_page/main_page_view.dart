@@ -1,5 +1,3 @@
-import 'package:covid_app/bloc/countries/countries_bloc.dart';
-import 'package:covid_app/bloc/covid_stats/covid_stats_bloc.dart';
 import 'package:flutter/material.dart';
 
 import 'package:covid_app/screen/sub_page/covid_data_page.dart';
@@ -87,7 +85,7 @@ class MainPageView extends StatelessWidget {
                       border: Border.all(color: Colors.grey, width: 5.0),
                     ),
                     child: DropdownButton(
-                        value: BlocProvider.of<CovidStatsBloc>(context).order,
+                        value: context.read<CovidStatsBloc>().state.order,
                         isExpanded: true,
                         style: const TextStyle(
                             color: Colors.black, fontSize: 15.0),
@@ -119,21 +117,21 @@ class MainPageView extends StatelessWidget {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return DataPageDialog(
-                                  date: BlocProvider.of<CovidStatsBloc>(context)
+                                  date: context.read<CovidStatsBloc>()
                                       .state
                                       .dailyCovidStats[index]
                                       .date,
-                                  deaths: BlocProvider.of<CovidStatsBloc>(context)
+                                  deaths: context.read<CovidStatsBloc>()
                                       .state
                                       .dailyCovidStats[index]
                                       .deaths,
                                   confirmed:
-                                      BlocProvider.of<CovidStatsBloc>(context)
+                                      context.read<CovidStatsBloc>()
                                           .state
                                           .dailyCovidStats[index]
                                           .confirmed,
                                   recovered:
-                                      BlocProvider.of<CovidStatsBloc>(context)
+                                      context.read<CovidStatsBloc>()
                                           .state
                                           .dailyCovidStats[index]
                                           .recovered);

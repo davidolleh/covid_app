@@ -1,7 +1,3 @@
-import 'package:covid_app/bloc/countries/countries_bloc.dart';
-import 'package:covid_app/bloc/covid_stats/covid_stats_bloc.dart';
-import 'package:covid_app/model/entity/country.dart';
-import 'package:covid_app/model/entity/covid_stats.dart';
 import 'package:covid_app/model/repository/covid_repository.dart';
 import 'package:covid_app/screen/sub_page/error_page.dart';
 import 'package:covid_app/screen/loading_screen/loading_view.dart';
